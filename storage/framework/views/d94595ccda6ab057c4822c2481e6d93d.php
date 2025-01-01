@@ -35,18 +35,7 @@
 								title="" alt="">
 							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-							<div class="position-relative cursor-pointer mx-3 mx-xl-0 px-0 mb-xl-7">
-								<img src="#"
-									data-src="<?php echo e(asset('assets/website/assets')); ?>/images/shop/product-gallery-08-154x205.jpg"
-									class="w-100 lazy-image" alt="product gallery" width="75" height="100">
-								<div
-									class="card-img-overlay d-inline-flex flex-column align-items-center justify-content-center">
-									<div
-										class="d-flex justify-content-center align-items-center rounded-circle product-gallery-video-thumb text-body-emphasis bg-body">
-										<i class="fas fa-play"></i>
-									</div>
-								</div>
-							</div>
+							
 						</div>
 					</div>
 
@@ -60,15 +49,6 @@
 								<img src="#" data-src="<?php echo e(asset('storage/' . $image)); ?>" width="540" height="720" title="" class="h-auto lazy-image" alt="">
 							</a>
 							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-							<div class="position-relative">
-								<img src="#" data-src="<?php echo e(asset('assets/website/assets')); ?>/images/shop/product-gallery-08.jpg" width="540" height="720" title="" class="h-auto lazy-image" alt="">
-								<div class="card-img-overlay d-inline-flex flex-column align-items-center justify-content-center">
-									<a href="https://www.youtube.com/watch?v=6v2L2UGZJAM" class="view-video d-flex justify-content-center align-items-center rounded-circle product-gallery-video btn btn-white">
-										<i class="fas fa-play"></i>
-									</a>
-								</div>
-							</div>
 						</div>
 					</div>
 
@@ -138,18 +118,30 @@
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 				</div>
 
+				<!-- Check if the product is already in the wishlist -->
+				<?php
+				$user = Auth::user();
+				$isInWishlist = \App\Models\Wishlist::where('user_id', $user->id)->where('product_id', $product->id)->exists();
+				?>
+
 				<!-- Add to Cart Form -->
-				<form action="<?php echo e(route('cart.add')); ?>" method="POST">
+				<form id="add-to-cart-form" action="<?php echo e(route('cart.add')); ?>" method="POST" onsubmit="return validatePriceSelection()">
 					<?php echo csrf_field(); ?>
 					<input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
 					<input type="hidden" name="price" value="">
 					<input type="hidden" name="unit" value="">
 
-					<button type="submit" class="btn-hover-bg-primary mt-5 btn-hover-border-primary btn btn-lg btn-dark w-100">Add to Cart</button>
+					<!-- Validation Message -->
+					<div id="validation-message" class="text-danger fw-bold mb-3" style="display: none;">
+						Please select a price before adding to the cart.
+					</div>
 
+					<button type="submit" class="btn-hover-bg-primary mt-5 btn-hover-border-primary btn btn-lg btn-dark w-100">
+						Add to Cart
+					</button>
 				</form>
 
-				<!-- JavaScript for Price Selection -->
+				<!-- JavaScript for Price Selection and Validation -->
 				<script>
 					function selectPriceUnit(unit, price, selectedCard) {
 						// Update hidden input fields
@@ -161,6 +153,22 @@
 							card.classList.remove('active');
 						});
 						selectedCard.classList.add('active');
+
+						// Hide validation message
+						document.getElementById('validation-message').style.display = 'none';
+					}
+
+					function validatePriceSelection() {
+						const price = document.querySelector('input[name="price"]').value;
+						const unit = document.querySelector('input[name="unit"]').value;
+
+						if (!price || !unit) {
+							const validationMessage = document.getElementById('validation-message');
+							validationMessage.style.display = 'block'; // Show validation message
+							return false; // Prevent form submission
+						}
+
+						return true; // Allow form submission
 					}
 				</script>
 
@@ -171,9 +179,35 @@
 						box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 						background-color: #f8f9fa;
 					}
+
+					.wishlist-button-added {
+						background-color: #28a745;
+						/* Green background for added state */
+						border-color: #28a745;
+						/* Green border for added state */
+						color: white;
+					}
+
+					.wishlist-button-added i {
+						color: white;
+					}
 				</style>
 
 				<!-- Wishlist Form -->
+				<?php if($isInWishlist): ?>
+				<!-- If the product is already in the wishlist, show "Product Added" button with new color -->
+				<button type="button" class="btn wishlist-button-added mt-4" id="remove-from-wishlist-btn">
+					<i class="fas fa-heart"></i> Added to Wishlist
+				</button>
+
+				<!-- Hidden Form for Removing from Wishlist -->
+				<form id="remove-from-wishlist-form" action="<?php echo e(route('wishlist.remove')); ?>" method="POST" style="display: none;">
+					<?php echo csrf_field(); ?>
+					<?php echo method_field('DELETE'); ?>
+					<input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
+				</form>
+				<?php else: ?>
+				<!-- If the product is not in the wishlist, show the "Add to Wishlist" button -->
 				<form action="<?php echo e(route('wishlist.store')); ?>" method="POST" id="wishlist-form">
 					<?php echo csrf_field(); ?>
 					<!-- Hidden fields for product information -->
@@ -188,6 +222,27 @@
 						<i class="fas fa-heart"></i> Add to Wishlist
 					</button>
 				</form>
+				<?php endif; ?>
+
+				<!-- JavaScript for Handling Removal from Wishlist with Confirmation -->
+				<script>
+					document.getElementById('remove-from-wishlist-btn').addEventListener('click', function() {
+						const userConfirmed = confirm("Are you sure you want to remove this product from your wishlist?");
+
+						if (userConfirmed) {
+							// Submit the form to remove the product from the wishlist
+							document.getElementById('remove-from-wishlist-form').submit();
+						}
+					});
+				</script>
+
+				<!-- JavaScript for Refreshing Page After Adding to Wishlist -->
+				<?php if(session('reload')): ?>
+				<script>
+					// Reload the page after adding to wishlist
+					window.location.reload();
+				</script>
+				<?php endif; ?>
 
 
 
@@ -272,15 +327,23 @@
 							<div class="collapse show border-md-0 border p-md-0 p-6" id="collapse-product-detail">
 								<div class="row">
 									<div class="col-12 col-lg-6 pe-lg-10 pe-xl-20">
-										<img src="<?php echo e(asset('storage/' . $detail->image)); ?>"
-											class="w-100 lazy-image" alt="" width="470" height="540">
+										<?php if(!empty($detail->image) && file_exists(public_path('storage/' . $detail->image))): ?>
+										<img src="<?php echo e(asset('storage/' . $detail->image)); ?>" class="w-100 lazy-image" alt="Image" width="470" height="540">
+										<?php else: ?>
+										<div class="placeholder-image" style="width: 470px; height: 540px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+											<span>No Image Available</span>
+										</div>
+										<?php endif; ?>
 									</div>
+
 									<div class="pb-3 col-12 col-lg-6 pt-12 pt-lg-0">
-										<p class="fw-semibold text-body-emphasis mb-2 pb-4"><?php echo $detail->description; ?>
-
-										</p>
-
+										<?php if(!empty($detail->description)): ?>
+										<p class="fw-semibold text-body-emphasis mb-2 pb-4"><?php echo $detail->description; ?></p>
+										<?php else: ?>
+										<p class="fw-semibold text-muted mb-2 pb-4">No description available.</p>
+										<?php endif; ?>
 									</div>
+
 								</div>
 							</div>
 						</div>
@@ -319,6 +382,7 @@
 								<div class="table-responsive mb-5">
 									<table class="table table-borderless mb-0">
 										<tbody>
+											<?php if($ingredients->count() > 0): ?>
 											<?php $__currentLoopData = $ingredients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ingredient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 											<tr>
 												<td class="ps-0 py-5 pe-5 text-body-emphasis"><?php echo e($ingredient->key); ?>
@@ -330,6 +394,9 @@
 												</td>
 											</tr>
 											<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+											<?php else: ?>
+											<p class="text-muted">No Ingredients details available for this product.</p>
+											<?php endif; ?>
 										</tbody>
 									</table>
 								</div>

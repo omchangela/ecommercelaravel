@@ -4,8 +4,8 @@ use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\BannerController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\IndepthProductDetailController;
 use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\HowToUseController;
@@ -53,7 +53,9 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     // Optional: If you need a specific route for showing ingredient details
     Route::get('ingredients-details/{id}', [IngredientController::class, 'show'])->name('ingredients.details');
+    Route::delete('howtouses/{howToUse}', [HowToUseController::class, 'destroy'])->name('admin.howtouses.destroy');
     Route::resource('howtouses', HowToUseController::class);
+    Route::resource('howtuses', HowToUseController::class);
 
 
 });

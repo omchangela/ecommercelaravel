@@ -43,7 +43,7 @@
                 @component('admin.component.text', [
                 'name' => 'name',
                 'title' => 'Name',
-                'value' => $record->name ?? null,
+                'value' => $record->name ?? '',
                 'required' => true,
                 ])@endcomponent
 
@@ -62,20 +62,16 @@
                         More Product Images<span class="text-danger"> *</span>
                     </label>
                     <input type="file" name="multiple_images[]" id="multiple_images" class="form-control" accept="image/*" multiple>
-                    @if(!empty($record->multiple_images))
-                        <div class="mt-3">
-                            <h6>Existing Images:</h6>
-                            <div class="d-flex flex-wrap">
-                                @foreach ($record->multiple_images as $image)
-                                    <div class="me-2">
-                                        <img src="{{ $image['url'] }}" alt="Image" class="img-thumbnail" style="width: 100px; height: auto;">
-                                        <div class="mt-1 text-center">
-                                            <button type="button" class="btn btn-sm btn-danger">Remove</button>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
+
+                    @if(isset($record) && is_array($record->multiple_images) && !empty($record->multiple_images))
+                    <div class="d-flex flex-wrap">
+                        @foreach ($record->multiple_images as $image)
+                        <div class="me-2 mb-2">
+                            <br>
+                            <img src="{{ asset('storage/' . $image) }}" alt="Image" class="img-thumbnail" style="width: 100px; height: auto;">
                         </div>
+                        @endforeach
+                    </div>
                     @endif
                 </div>
 
@@ -83,7 +79,7 @@
                 @component('admin.component.select', [
                 'name' => 'status',
                 'title' => 'Status',
-                'value' => $record->status ?? null,
+                'value' => $record->status ?? 'Active', // Default to 'Active' for new products
                 'required' => true,
                 'options' => ['Active' => 'Active', 'Inactive' => 'Inactive'],
                 ])@endcomponent
@@ -106,7 +102,7 @@
                 <!-- Description Field -->
                 <div class="mb-2">
                     <label for="description" class="form-label">
-                        Description<span class="text-danger"> *</span>
+                        One-Line Description<span class="text-danger"> *</span>
                     </label>
                     <textarea name="description" id="description" class="form-control" rows="4" placeholder="Enter product description" required>{{ $record->description ?? '' }}</textarea>
                 </div>

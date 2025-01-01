@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Providers;
+
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Wishlist;
 use App\Models\Cart;
+use App\Models\Wishlist;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,33 +21,28 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
-{
+    public function boot(): void
+    {
+        // Share wishlist count
+        View::composer('*', function ($view) {
+            $wishlistCount = Auth::check() ? Wishlist::where('user_id', Auth::id())->count() : 0;
+            $view->with('wishlistCount', $wishlistCount);
+        });
 
-    
-    View::composer('*', function ($view) {
-        $wishlistCount = 0;
+        // Share cart count and cart items
+        View::composer('*', function ($view) {
+            $cartCount = 0;
+            $cartItems = [];
 
-        if (Auth::check()) {
-            $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
-        }
+            if (Auth::check()) {
+                $cartCount = Cart::where('user_id', Auth::id())->count();
+                $cartItems = Cart::where('user_id', Auth::id())->get();
+            }
 
-        $view->with('wishlistCount', $wishlistCount);
-    });
-
-    View::composer('*', function ($view) {
-        $cartCount = 0;
-
-        if (Auth::check()) {
-            $cartCount = Cart::where('user_id', Auth::id())->count();
-        }
-
-        $view->with('cartCount', $cartCount);
-    });
-
-    view()->composer('*', function ($view) {
-        $cartItems = Cart::where('user_id', auth()->id())->get(); // Adjust the query as needed.
-        $view->with('cartItems', $cartItems);
-    });
-}
+            $view->with([
+                'cartCount' => $cartCount,
+                'cartItems' => $cartItems
+            ]);
+        });
+    }
 }

@@ -66,9 +66,7 @@
                                 <figure class="card-img-top position-relative mb-7 overflow-hidden">
                                     <a href="<?php echo e(route('product.detail', ['id' => $product->id])); ?>" class="hover-zoom-in d-block" title="<?php echo e($product->name); ?>">
                                         <img src="<?php echo e($product->image_url); ?>" class="img-fluid lazy-image w-100" alt="<?php echo e($product->name); ?>" width="330" height="440">
-                                    </a>
-
-                                    
+                                    </a>    
                                 </figure>
                                 <div class="card-body text-center p-0">
                                     <!-- Updated Price Display -->

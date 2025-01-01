@@ -43,7 +43,7 @@
                                 <i class="fas fa-times"></i>
                             </a>
                             <form id="delete-wishlist-{{ $wishlist->id }}"
-                                action="{{ route('wishlist.destroy', $wishlist->id) }}?return={{ request()->fullUrl() }}"
+                                action="{{ route('wishlist.remove', $wishlist->id) }}?return={{ request()->fullUrl() }}"
                                 method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')

@@ -1,3 +1,4 @@
+
 <div class="modal-header pt-2 pb-2 bg-secondary text-white">
     <h5 class="modal-title"><?php echo e($title); ?> - Form</h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -52,5 +53,6 @@
 </div>
 
 <?php echo e(html()->form()->close()); ?>
+
 
 <?php /**PATH C:\Users\ASUS\Downloads\mark11\resources\views/admin/category/form.blade.php ENDPATH**/ ?>

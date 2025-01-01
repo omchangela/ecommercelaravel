@@ -1,3 +1,4 @@
+
 <div class="modal-header pt-2 pb-2 bg-secondary text-white">
     <h5 class="modal-title">{{ $title }} - Form</h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -50,3 +51,4 @@
 </div>
 
 {{ html()->form()->close() }}
+

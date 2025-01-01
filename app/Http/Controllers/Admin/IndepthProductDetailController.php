@@ -6,17 +6,44 @@ use App\Http\Controllers\Controller;
 use App\Models\IndepthProductDetail;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class IndepthProductDetailController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $details = IndepthProductDetail::with('product')->paginate(10);
-        return view('admin.indepth_product_details.index', compact('details'));
-    }
+
+    
+     public function index(Request $request)
+     {
+         if ($request->ajax()) {
+             $details = IndepthProductDetail::with('product')->select('indepth_product_details.*');
+             return DataTables::of($details)
+                 ->addColumn('image', function ($detail) {
+                     $url = asset('storage/' . $detail->image);
+                     return '<img src="' . $url . '" alt="Image" class="img-thumbnail" width="100">';
+                 })
+                 ->addColumn('product_name', function ($detail) {
+                     return $detail->product->name ?? 'N/A';
+                 })
+                 ->addColumn('actions', function ($detail) {
+                     $editUrl = route('admin.indepth-product-details.edit', $detail->id);
+                     $deleteUrl = route('admin.indepth-product-details.destroy', $detail->id);
+                     return '
+                         <a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>
+                         <form action="' . $deleteUrl . '" method="POST" class="d-inline">
+                             ' . csrf_field() . method_field('DELETE') . '
+                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure?\')">Delete</button>
+                         </form>';
+                 })
+                 ->rawColumns(['image', 'actions'])
+                 ->make(true);
+         }
+     
+         return view('admin.indepth_product_details.index');
+     }
+     
 
     /**
      * Show the form for creating a new resource.
@@ -103,16 +130,5 @@ class IndepthProductDetailController extends Controller
         return redirect()->route('admin.indepth-product-details.index')->with('success', 'Detail deleted successfully.');
     }
 
-//     public function show($id)
-// {
-    
-//     $detail = IndepthProductDetail::with('product')->where('product_id', $id)->first();
-
-//     if (!$detail) {
-//         abort(404, 'Product details not found');
-//     }
-
-//     return view('website.productdetails', compact('detail'));
-// }
 
 }

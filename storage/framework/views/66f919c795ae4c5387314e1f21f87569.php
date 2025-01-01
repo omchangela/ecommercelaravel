@@ -43,7 +43,7 @@
                                 <i class="fas fa-times"></i>
                             </a>
                             <form id="delete-wishlist-<?php echo e($wishlist->id); ?>"
-                                action="<?php echo e(route('wishlist.destroy', $wishlist->id)); ?>?return=<?php echo e(request()->fullUrl()); ?>"
+                                action="<?php echo e(route('wishlist.remove', $wishlist->id)); ?>?return=<?php echo e(request()->fullUrl()); ?>"
                                 method="POST" style="display: none;">
                                 <?php echo csrf_field(); ?>
                                 <?php echo method_field('DELETE'); ?>

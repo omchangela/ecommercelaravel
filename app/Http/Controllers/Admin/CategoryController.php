@@ -58,8 +58,8 @@ class CategoryController extends Controller
                             'text-warning' => ($record['status'] == "Inactive")]);
                 })
                 ->addColumn('action', function ($record) {
-                    return '<button data-url="' . route($this->data['route'] . 'show', $record->id) . '" class="btn btn-indigo btn-sm ajax_show" title="View" data-method="GET">View</button>' .
-                        '&nbsp;<button data-url="' . route($this->data['route'] . 'edit', $record->id) . '" class="btn btn-teal btn-sm ajax_insert_update" title="Edit" data-method="GET">Edit</button>' .
+                    return 
+                        '<button data-url="' . route($this->data['route'] . 'edit', $record->id) . '" class="btn btn-teal btn-sm ajax_insert_update" title="Edit" data-method="GET">Edit</button>' .
                         '&nbsp;<button class="btn btn-danger btn-sm ajax_delete" data-id="' . $record->id . '" data-toggle="tooltip" data-original-title="Delete">Delete</button>';
                 })
                 ->rawColumns(['status', 'action', 'image'])

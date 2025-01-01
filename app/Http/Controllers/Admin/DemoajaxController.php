@@ -35,29 +35,29 @@ class DemoajaxController extends Controller
      */
     public function index(Request $request)
     {
-//        $this->data['records'] = Demo::all();
+        //        $this->data['records'] = Demo::all();
         if ($request->ajax()) {
             $records = Demo::select('*');
             return DataTables::of($records)
                 ->editColumn('created_at', function ($record) {
                     return $record->created_at->format(config('setting.DATETIME_FORMAT'));
                 })
-//                ->editColumn('image', function ($record) {
-//                    return '<img src="' . $record['image_url'] . '" width="100"> ';
-//                })
+                //                ->editColumn('image', function ($record) {
+                //                    return '<img src="' . $record['image_url'] . '" width="100"> ';
+                //                })
                 ->addColumn('status', function ($record) {
-                    return html()->select('status',\App\Models\Variable::$status)->value($record['status'])->attributes(['data-id' => $record->id])
-                        ->class(['update_field','form-select','form-select-sm','text-success' => ($record['status'] == "Active"),'text-warning' => ($record['status'] == "Inactive")]);
+                    return html()->select('status', \App\Models\Variable::$status)->value($record['status'])->attributes(['data-id' => $record->id])
+                        ->class(['update_field', 'form-select', 'form-select-sm', 'text-success' => ($record['status'] == "Active"), 'text-warning' => ($record['status'] == "Inactive")]);
                 })
                 ->addColumn('action', function ($record) {
                     return '<button data-url="' . route($this->data['route'] . 'show', $record->id) . '" class="btn btn-indigo btn-sm ajax_show" title="View" data-method="GET">View</button>' .
-                        '&nbsp;<button data-url="' . route($this->data['route'] . 'edit', $record->id) . '" class="btn btn-teal btn-sm ajax_insert_update" title="Edit"  data-method="GET" >Edit</button>'.
+                        '&nbsp;<button data-url="' . route($this->data['route'] . 'edit', $record->id) . '" class="btn btn-teal btn-sm ajax_insert_update" title="Edit"  data-method="GET" >Edit</button>' .
                         '&nbsp;<button class="btn btn-danger btn-sm ajax_delete " data-id="' . $record->id . '" data-toggle="tooltip" data-original-title="Delete">Delete</button>';
                 })
                 ->rawColumns(['status', 'action', 'image'])
                 ->make(true);
         }
-        return view('admin.demoajax.index',$this->data);
+        return view('admin.demoajax.index', $this->data);
     }
 
     /**
@@ -65,7 +65,7 @@ class DemoajaxController extends Controller
      */
     public function create()
     {
-        return view('admin.demoajax.form',$this->data);
+        return view('admin.demoajax.form', $this->data);
     }
 
     /**
@@ -115,7 +115,7 @@ class DemoajaxController extends Controller
         /* Change Status Block */
         if ($request->ajax()  && !empty($request['quick_update'])) {
             $record->update($request->only(['status']));
-            return \Illuminate\Support\Facades\Response::json(['result' => 'success','message_type' => 'info', 'message' => 'Record updated successfully!']);
+            return \Illuminate\Support\Facades\Response::json(['result' => 'success', 'message_type' => 'info', 'message' => 'Record updated successfully!']);
         }
 
         $validator = $this->_validate($request);
@@ -127,10 +127,10 @@ class DemoajaxController extends Controller
         }
 
         $inputs = $request->all();
-//        $inputs['image'] = $this->uploadFile($request, $record, 'image', 'brand');
-//        if (empty($inputs['image'])) {
-//            unset($inputs['image']);
-//        }
+        //        $inputs['image'] = $this->uploadFile($request, $record, 'image', 'brand');
+        //        if (empty($inputs['image'])) {
+        //            unset($inputs['image']);
+        //        }
         $record->update($inputs);
 
         $response['result'] = '1';

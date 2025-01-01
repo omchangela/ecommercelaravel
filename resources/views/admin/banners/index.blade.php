@@ -31,39 +31,35 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($banners as $banner)
-                <tr>
-                    <td>{{ $banner->id }}</td>
-                    <td>{{ $banner->text_input_1 }}</td>
-                    <td>{{ $banner->text_input_2 }}</td>
-                    <td>{{ $banner->text_input_3 }}</td>
-                    <td><img src="{{ Storage::url($banner->image) }}" alt="Banner Image" width="100"></td>
-                    <td>{{ $banner->created_at->format('Y-m-d H:i:s') }}</td>
-                    <td>
-                        <!-- View Button -->
-                        <a href="{{ route('admin.banners.show', $banner->id) }}" class="btn btn-info btn-sm" title="View">
-                            View
-                        </a>
-
-                        <!-- Edit Button -->
-                        <a href="{{ route('admin.banners.edit', $banner->id) }}" class="btn btn-warning btn-sm" title="Edit">
-                            Edit
-                        </a>
-
-                        <!-- Delete Button -->
-                        <form action="{{ route('admin.banners.destroy', $banner->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this banner?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                Delete
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
+                <!-- Data will be loaded dynamically via AJAX -->
             </tbody>
         </table>
     </div>
 </div>
 
+@endsection
+
+@section('js')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datatable').DataTable({
+            "processing": true,       // Show loading indicator while data is being processed
+            "serverSide": true,       // Enable server-side processing
+            "ajax": {
+                "url": "{{ route('admin.banners.index') }}", // URL for fetching the data
+                "type": "GET"
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "text_input_1" },
+                { "data": "text_input_2" },
+                { "data": "text_input_3" },
+                { "data": "image", "orderable": false, "searchable": false },
+                { "data": "created_at" },
+                { "data": "action", "orderable": false, "searchable": false }
+            ],
+            "order": [[0, 'desc']]  // Default sorting by ID
+        });
+    });
+</script>
 @endsection

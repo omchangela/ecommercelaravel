@@ -10,7 +10,7 @@
     <title>Glowing Ecommerce</title>
     <link rel="icon" href="{{ asset('assets/website/assets') }}/images/others/favicon.ico">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+ 
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/vendors/lightgallery/css/lightgallery-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/vendors/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/vendors/animate/animate.min.css">
@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/css/theme-home-09.css">
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/css/theme.css">
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         tinymce.init({
             selector: '#description-editor', // ID of the text area to be converted

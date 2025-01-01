@@ -81,6 +81,7 @@ class ProductController extends Controller
         return view('admin.product.index', $this->data);
     }
    
+    
     /**
      * Show the form for creating a new resource.
      */

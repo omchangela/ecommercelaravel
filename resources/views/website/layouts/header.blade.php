@@ -31,7 +31,7 @@
 							</li>
 							<li class="nav-item transition-all-xl-1 py-xl-11 py-0 me-xxl-12 me-xl-10  dropdown-hover dropdown-fullwidth position-static">
 								<a class="nav-link d-flex justify-content-between position-relative py-xl-0 px-xl-0 text-uppercase fw-semibold ls-1 fs-15px fs-xl-14px"
-									href="/shop"  id="menu-item-shop" aria-haspopup="true" aria-expanded="false">Shop</a>
+									href="/shop" id="menu-item-shop" aria-haspopup="true" aria-expanded="false">Shop</a>
 							</li>
 
 							<li class="nav-item transition-all-xl-1 py-xl-11 py-0 me-xxl-12 me-xl-10 dropdown dropdown-hover">
@@ -148,7 +148,7 @@
 										</svg>
 									</button>
 								</li>
-								
+
 								<li>
 									<button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
 										<svg class="bi me-4 opacity-50 theme-icon">
@@ -167,7 +167,67 @@
 		</div>
 	</div>
 </header>
+<div class="navbar">
+	<div id="offCanvasNavBar" class="offcanvas offcanvas-start" style="--bs-offcanvas-width: 310px">
 
+		<div class="offcanvas-header bg-body-tertiary">
+			<h3 class="offcanvas-title text-uppercase">Glowing</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<hr class="mt-0">
+		<div class="offcanvas-body pt-0 mb-2">
+			<ul class="navbar-nav">
+
+				<li class="nav-item transition-all-xl-1 py-0 ">
+					<a class="nav-link d-flex justify-content-between position-relative text-uppercase fw-semibold ls-1 fs-15px"
+						href="/" id="menu-item-home-canvas"
+						aria-haspopup="true" aria-expanded="false">Home</a>
+
+				</li>
+				<li class="nav-item transition-all-xl-1 py-0  position-static">
+					<a class="nav-link d-flex justify-content-between position-relative text-uppercase fw-semibold ls-1 fs-15px "
+						href="/shop" id="menu-item-shop-canvas"
+						aria-haspopup="true" aria-expanded="false">Shop</a>
+
+				</li>
+				<li class="nav-item transition-all-xl-1 py-0 dropdown">
+					<a class="nav-link d-flex justify-content-between position-relative text-uppercase fw-semibold ls-1 fs-15px dropdown-toggle"
+						href="#" data-bs-toggle="dropdown" id="menu-item-pages-canvas" aria-haspopup="true"
+						aria-expanded="false">Pages</a>
+
+				</li>
+				<li class="nav-item transition-all-xl-1 py-0 dropdown dropdown-fullwidth">
+					<a class="nav-link d-flex justify-content-between position-relative text-uppercase fw-semibold ls-1 fs-15px dropdown-toggle"
+						href="#" data-bs-toggle="dropdown" id="menu-item-blocks-canvas" aria-haspopup="true"
+						aria-expanded="false">Blocks</a>
+
+				</li>
+				<li class="nav-item transition-all-xl-1 py-0 dropdown dropdown-fullwidth">
+					<a class="nav-link d-flex justify-content-between position-relative text-uppercase fw-semibold ls-1 fs-15px dropdown-toggle"
+						href="#" data-bs-toggle="dropdown" id="menu-item-docs-canvas" aria-haspopup="true"
+						aria-expanded="false">Docs</a>
+
+				</li>
+			</ul>
+		</div>
+		<hr class="mb-0">
+		<div class="offcanvas-footer bg-body-tertiary">
+			© 2023 Glowing. <br>
+			All rights reserved.
+		</div>
+	</div>
+</div>
+<div class="position-fixed z-index-10 bottom-0 end-0 p-10">
+	<a href="#"
+		class="gtf-back-to-top text-decoration-none bg-body text-primary bg-primary-hover text-light-hover shadow square p-0 rounded-circle d-flex align-items-center justify-content-center"
+		title="Back To Top" style="--square-size: 48px"><i class="fa-solid fa-arrow-up"></i></a>
+</div>
+
+<div class="position-fixed z-index-10 bottom-0 end-0 p-10">
+	<a href="#"
+		class="gtf-back-to-top text-decoration-none bg-body text-primary bg-primary-hover text-light-hover shadow square p-0 rounded-circle d-flex align-items-center justify-content-center"
+		title="Back To Top" style="--square-size: 48px"><i class="fa-solid fa-arrow-up"></i></a>
+</div>
 <div id="shoppingCart" class="offcanvas offcanvas-end">
 	<div class="offcanvas-header fs-4">
 		<h4 class="offcanvas-title fw-semibold">Shopping Bag</h4>
@@ -179,7 +239,95 @@
 		<form class="table-responsive-md shopping-cart pb-8 pb-lg-10">
 			<table class="table table-borderless">
 				<tbody>
-					@foreach ($cartItems as $item)
+					@forelse ($cartItems as $item)
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+							const cartItems = document.querySelectorAll('.cart-item');
+							const cartTotalElement = document.getElementById('cart-total');
+							const checkoutButton = document.getElementById('checkoutButton');
+
+							// Function to update the cart total
+							const updateCart = () => {
+								let total = 0;
+
+								cartItems.forEach(item => {
+									const price = parseFloat(item.dataset.price) || 0;
+									const quantityInput = item.querySelector('.item-quantity');
+									const quantity = parseInt(quantityInput.value) || 0;
+									const itemTotal = price * quantity;
+
+									// Update the item total in the UI
+									item.querySelector('.item-total').textContent = `₹${itemTotal.toFixed(2)}`;
+									total += itemTotal;
+								});
+
+								// Update the cart total in the UI
+								cartTotalElement.textContent = `₹${total.toFixed(2)}`;
+							};
+
+							// Add event listeners to increment, decrement, and quantity input fields
+							cartItems.forEach(item => {
+								const quantityInput = item.querySelector('.item-quantity');
+								const decrementBtn = item.querySelector('.decrement-btn');
+								const incrementBtn = item.querySelector('.increment-btn');
+
+								decrementBtn.addEventListener('click', (e) => {
+									e.preventDefault();
+									let value = parseInt(quantityInput.value) || 0;
+									if (value > 1) {
+										quantityInput.value = value - 1;
+										updateCart();
+									}
+								});
+
+								incrementBtn.addEventListener('click', (e) => {
+									e.preventDefault();
+									let value = parseInt(quantityInput.value) || 0;
+									quantityInput.value = value + 1;
+									updateCart();
+								});
+
+								quantityInput.addEventListener('input', updateCart);
+							});
+
+							// Handle checkout button click
+							checkoutButton.addEventListener('click', (e) => {
+								e.preventDefault();
+
+								const cartData = Array.from(cartItems).map(item => ({
+									id: item.dataset.id,
+									quantity: item.querySelector('.item-quantity').value
+								}));
+
+								fetch('{{ route("cart.updateQuantity") }}', {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json',
+											'X-CSRF-TOKEN': '{{ csrf_token() }}'
+										},
+										body: JSON.stringify({
+											cartItems: cartData
+										})
+									})
+									.then(response => response.json())
+									.then(data => {
+										if (data.success) {
+											window.location.href = '{{ route("checkout.store") }}';
+										} else {
+											alert('Failed to update the cart. Please try again.');
+										}
+									})
+									.catch(error => {
+										console.error('Error updating the cart:', error);
+										alert('An error occurred. Please try again.');
+									});
+							});
+
+							// Initial cart update on page load
+							updateCart();
+						});
+					</script>
+
 					<tr class="position-relative cart-item" data-price="{{ $item->price }}" data-id="{{ $item->id }}">
 						<td class="align-middle text-center">
 							<form action="{{ route('cart.destroy', $item->id) }}" method="POST" style="display: inline;">
@@ -192,12 +340,14 @@
 						</td>
 						<td class="shop-product">
 							<div class="d-flex align-items-center">
-								<div class="me-6">
+								<div class="me-3">
 									<img src="{{ asset($item->image_url) }}" alt="{{ $item->product_name }}" width="60" height="80">
 								</div>
 								<div>
 									<p class="card-text mb-1">
-										<span class="fs-15px item-total fw-bold text-body-emphasis">₹{{ number_format($item->price * $item->quantity, 2) }}</span>
+										<span class="fs-15px item-total fw-bold text-body-emphasis">
+											₹{{ number_format($item->price * $item->quantity, 2) }}
+										</span>
 										<span class="fs-13px fw-500 pe-3">/ {{ $item->unit }}</span>
 									</p>
 									<p class="fw-500 text-body-emphasis">{{ $item->product_name }}</p>
@@ -206,20 +356,25 @@
 						</td>
 						<td class="align-middle p-0">
 							<div class="input-group position-relative shop-quantity">
-								<a href="#" class="shop-down position-absolute z-index-2 decrement-btn min">
+								<button class="border-0 shop-down position-absolute z-index-2 decrement-btn">
 									<i class="far fa-minus"></i>
-								</a>
-								<input name="quantity[]" type="number" class="form-control form-control-sm px-6 py-4 fs-6 text-center border-0 item-quantity" value="{{ $item->quantity }}" required>
-								<a href="#" class="shop-up position-absolute z-index-2 increment-btn">
+								</button>
+								<input name="quantity[]" type="number" class="form-control form-control-sm px-6 py-4 fs-6 text-center border-0 item-quantity" disabled  value="{{ $item->quantity }}" required>
+								<button class="border-0 shop-up position-absolute z-index-2 increment-btn">
 									<i class="far fa-plus"></i>
-								</a>
+								</button>
 							</div>
+							
 						</td>
 					</tr>
-					@endforeach
-					@if ($cartItems->isEmpty())
-					<p class="empty-cart-message">Your cart is empty.</p>
-					@endif
+
+					@empty
+					<tr>
+						<td colspan="3" class="text-center">
+							<p class="empty-cart-message">Your cart is empty.</p>
+						</td>
+					</tr>
+					@endforelse
 				</tbody>
 			</table>
 		</form>
@@ -227,62 +382,22 @@
 	<div class="offcanvas-footer flex-wrap">
 		<div class="d-flex align-items-center justify-content-between w-100 mb-5">
 			<span class="text-body-emphasis">Total price:</span>
-			<span id="cart-total" class="cart-total fw-bold text-body-emphasis">₹{{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity), 2) }}</span>
+			<span id="cart-total" class="cart-total fw-bold text-body-emphasis">
+				₹{{ number_format(collect($cartItems)->sum(fn($item) => $item->price * $item->quantity), 2) }}
+			</span>
 		</div>
 		<a href="{{ route('checkout.store') }}" class="btn btn-dark w-100 mb-7" title="Check Out" id="checkoutButton">Check Out</a>
-		<a href="/shop" class="btn btn-outline-dark w-100" title="View shopping cart">Continue shopping</a>
+		<a href="/shop" class="btn btn-outline-dark w-100" title="Continue Shopping">Continue Shopping</a>
 	</div>
 </div>
 
-<script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const cartItems = document.querySelectorAll('.cart-item');
-		const cartTotalElement = document.getElementById('cart-total');
-
-		const updateCart = () => {
-			let total = 0;
-
-			cartItems.forEach(item => {
-				const price = parseFloat(item.dataset.price);
-				const quantityInput = item.querySelector('.item-quantity');
-				const quantity = parseInt(quantityInput.value) || 0;
-				const itemTotal = price * quantity;
-
-				item.querySelector('.item-total').textContent = `₹${itemTotal.toFixed(2)}`;
-				total += itemTotal;
-			});
-
-			cartTotalElement.textContent = `₹${total.toFixed(2)}`;
-		};
-
-		// Handle increment/decrement
-		cartItems.forEach(item => {
-			const quantityInput = item.querySelector('.item-quantity');
-
-			item.querySelector('.decrement-btn').addEventListener('click', (e) => {
-				e.preventDefault();
-				let value = parseInt(quantityInput.value);
-				if (value > 1) {
-					quantityInput.value = value - 1;
-					updateCart();
-				}
-			});
-
-			item.querySelector('.increment-btn').addEventListener('click', (e) => {
-				e.preventDefault();
-				let value = parseInt(quantityInput.value);
-				quantityInput.value = value + 1;
-				updateCart();
-			});
-
-			quantityInput.addEventListener('input', updateCart);
-		});
-
-		updateCart();
-	});
-</script>
 
 
+<div class="position-fixed z-index-10 bottom-0 end-0 p-10">
+	<a href="#"
+		class="gtf-back-to-top text-decoration-none bg-body text-primary bg-primary-hover text-light-hover shadow square p-0 rounded-circle d-flex align-items-center justify-content-center"
+		title="Back To Top" style="--square-size: 48px"><i class="fa-solid fa-arrow-up"></i></a>
+</div>
 
 
 

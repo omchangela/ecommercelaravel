@@ -35,18 +35,7 @@
 								title="" alt="">
 							@endforeach
 
-							<div class="position-relative cursor-pointer mx-3 mx-xl-0 px-0 mb-xl-7">
-								<img src="#"
-									data-src="{{ asset('assets/website/assets') }}/images/shop/product-gallery-08-154x205.jpg"
-									class="w-100 lazy-image" alt="product gallery" width="75" height="100">
-								<div
-									class="card-img-overlay d-inline-flex flex-column align-items-center justify-content-center">
-									<div
-										class="d-flex justify-content-center align-items-center rounded-circle product-gallery-video-thumb text-body-emphasis bg-body">
-										<i class="fas fa-play"></i>
-									</div>
-								</div>
-							</div>
+							
 						</div>
 					</div>
 
@@ -60,15 +49,6 @@
 								<img src="#" data-src="{{ asset('storage/' . $image) }}" width="540" height="720" title="" class="h-auto lazy-image" alt="">
 							</a>
 							@endforeach
-
-							<div class="position-relative">
-								<img src="#" data-src="{{ asset('assets/website/assets') }}/images/shop/product-gallery-08.jpg" width="540" height="720" title="" class="h-auto lazy-image" alt="">
-								<div class="card-img-overlay d-inline-flex flex-column align-items-center justify-content-center">
-									<a href="https://www.youtube.com/watch?v=6v2L2UGZJAM" class="view-video d-flex justify-content-center align-items-center rounded-circle product-gallery-video btn btn-white">
-										<i class="fas fa-play"></i>
-									</a>
-								</div>
-							</div>
 						</div>
 					</div>
 
@@ -136,18 +116,30 @@
 					@endforeach
 				</div>
 
+				<!-- Check if the product is already in the wishlist -->
+				@php
+				$user = Auth::user();
+				$isInWishlist = \App\Models\Wishlist::where('user_id', $user->id)->where('product_id', $product->id)->exists();
+				@endphp
+
 				<!-- Add to Cart Form -->
-				<form action="{{ route('cart.add') }}" method="POST">
+				<form id="add-to-cart-form" action="{{ route('cart.add') }}" method="POST" onsubmit="return validatePriceSelection()">
 					@csrf
 					<input type="hidden" name="product_id" value="{{ $product->id }}">
 					<input type="hidden" name="price" value="">
 					<input type="hidden" name="unit" value="">
 
-					<button type="submit" class="btn-hover-bg-primary mt-5 btn-hover-border-primary btn btn-lg btn-dark w-100">Add to Cart</button>
+					<!-- Validation Message -->
+					<div id="validation-message" class="text-danger fw-bold mb-3" style="display: none;">
+						Please select a price before adding to the cart.
+					</div>
 
+					<button type="submit" class="btn-hover-bg-primary mt-5 btn-hover-border-primary btn btn-lg btn-dark w-100">
+						Add to Cart
+					</button>
 				</form>
 
-				<!-- JavaScript for Price Selection -->
+				<!-- JavaScript for Price Selection and Validation -->
 				<script>
 					function selectPriceUnit(unit, price, selectedCard) {
 						// Update hidden input fields
@@ -159,6 +151,22 @@
 							card.classList.remove('active');
 						});
 						selectedCard.classList.add('active');
+
+						// Hide validation message
+						document.getElementById('validation-message').style.display = 'none';
+					}
+
+					function validatePriceSelection() {
+						const price = document.querySelector('input[name="price"]').value;
+						const unit = document.querySelector('input[name="unit"]').value;
+
+						if (!price || !unit) {
+							const validationMessage = document.getElementById('validation-message');
+							validationMessage.style.display = 'block'; // Show validation message
+							return false; // Prevent form submission
+						}
+
+						return true; // Allow form submission
 					}
 				</script>
 
@@ -169,9 +177,35 @@
 						box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 						background-color: #f8f9fa;
 					}
+
+					.wishlist-button-added {
+						background-color: #28a745;
+						/* Green background for added state */
+						border-color: #28a745;
+						/* Green border for added state */
+						color: white;
+					}
+
+					.wishlist-button-added i {
+						color: white;
+					}
 				</style>
 
 				<!-- Wishlist Form -->
+				@if($isInWishlist)
+				<!-- If the product is already in the wishlist, show "Product Added" button with new color -->
+				<button type="button" class="btn wishlist-button-added mt-4" id="remove-from-wishlist-btn">
+					<i class="fas fa-heart"></i> Added to Wishlist
+				</button>
+
+				<!-- Hidden Form for Removing from Wishlist -->
+				<form id="remove-from-wishlist-form" action="{{ route('wishlist.remove') }}" method="POST" style="display: none;">
+					@csrf
+					@method('DELETE')
+					<input type="hidden" name="product_id" value="{{ $product->id }}">
+				</form>
+				@else
+				<!-- If the product is not in the wishlist, show the "Add to Wishlist" button -->
 				<form action="{{ route('wishlist.store') }}" method="POST" id="wishlist-form">
 					@csrf
 					<!-- Hidden fields for product information -->
@@ -186,6 +220,27 @@
 						<i class="fas fa-heart"></i> Add to Wishlist
 					</button>
 				</form>
+				@endif
+
+				<!-- JavaScript for Handling Removal from Wishlist with Confirmation -->
+				<script>
+					document.getElementById('remove-from-wishlist-btn').addEventListener('click', function() {
+						const userConfirmed = confirm("Are you sure you want to remove this product from your wishlist?");
+
+						if (userConfirmed) {
+							// Submit the form to remove the product from the wishlist
+							document.getElementById('remove-from-wishlist-form').submit();
+						}
+					});
+				</script>
+
+				<!-- JavaScript for Refreshing Page After Adding to Wishlist -->
+				@if(session('reload'))
+				<script>
+					// Reload the page after adding to wishlist
+					window.location.reload();
+				</script>
+				@endif
 
 
 
@@ -270,14 +325,23 @@
 							<div class="collapse show border-md-0 border p-md-0 p-6" id="collapse-product-detail">
 								<div class="row">
 									<div class="col-12 col-lg-6 pe-lg-10 pe-xl-20">
-										<img src="{{ asset('storage/' . $detail->image) }}"
-											class="w-100 lazy-image" alt="" width="470" height="540">
+										@if (!empty($detail->image) && file_exists(public_path('storage/' . $detail->image)))
+										<img src="{{ asset('storage/' . $detail->image) }}" class="w-100 lazy-image" alt="Image" width="470" height="540">
+										@else
+										<div class="placeholder-image" style="width: 470px; height: 540px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+											<span>No Image Available</span>
+										</div>
+										@endif
 									</div>
-									<div class="pb-3 col-12 col-lg-6 pt-12 pt-lg-0">
-										<p class="fw-semibold text-body-emphasis mb-2 pb-4">{!! $detail->description !!}
-										</p>
 
+									<div class="pb-3 col-12 col-lg-6 pt-12 pt-lg-0">
+										@if (!empty($detail->description))
+										<p class="fw-semibold text-body-emphasis mb-2 pb-4">{!! $detail->description !!}</p>
+										@else
+										<p class="fw-semibold text-muted mb-2 pb-4">No description available.</p>
+										@endif
 									</div>
+
 								</div>
 							</div>
 						</div>
@@ -316,6 +380,7 @@
 								<div class="table-responsive mb-5">
 									<table class="table table-borderless mb-0">
 										<tbody>
+											@if($ingredients->count() > 0)
 											@foreach($ingredients as $ingredient)
 											<tr>
 												<td class="ps-0 py-5 pe-5 text-body-emphasis">{{ $ingredient->key }}
@@ -325,6 +390,9 @@
 												</td>
 											</tr>
 											@endforeach
+											@else
+											<p class="text-muted">No Ingredients details available for this product.</p>
+											@endif
 										</tbody>
 									</table>
 								</div>

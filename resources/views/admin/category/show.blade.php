@@ -1,3 +1,8 @@
+@extends('admin.layout.app')
+
+@section('body')
+
+
 <div class="modal-header pt-2 pb-2 bg-secondary text-white">
     <h5 class="modal-title">{{ $title }} - Details</h5>
     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -37,3 +42,5 @@
     <button type="button" class="btn btn-link border-info" data-bs-dismiss="modal">Close</button>
     {{--<button type="submit" class="btn btn-primary">Save changes <i class="ph-paper-plane-tilt ms-2"></i></button>--}}
 </div>
+
+@endsection
