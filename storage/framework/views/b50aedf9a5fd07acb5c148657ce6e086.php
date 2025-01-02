@@ -15,7 +15,7 @@
         <form action="<?php echo e(isset($ingredient) ? route('admin.ingredients.update', $ingredient->id) : route('admin.ingredients.store')); ?>" method="POST">
             <?php echo csrf_field(); ?>
             <?php if(isset($ingredient)): ?>
-                <?php echo method_field('PUT'); ?> <!-- Indicate the method for updating -->
+                <?php echo method_field('PUT'); ?>
             <?php endif; ?>
 
             <div class="card">
@@ -26,17 +26,17 @@
 
                     <!-- Validation errors -->
                     <?php if($errors->any()): ?>
-                    <div id="validation-errors" class="message-section">
-                        <div class="alert alert-danger alert-dismissible">
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            <h5><i class="icon fas fa-ban"></i> Validation Error!</h5>
-                            <ul>
-                                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li><?php echo e($error); ?></li>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </ul>
+                        <div id="validation-errors" class="message-section">
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <h5><i class="icon fas fa-ban"></i> Validation Error!</h5>
+                                <ul>
+                                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <li><?php echo e($error); ?></li>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
                     <?php endif; ?>
 
                     <!-- Product Field -->
@@ -49,10 +49,10 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>">
+unset($__errorArgs, $__bag); ?>" required>
                             <option value="">Select Product</option>
                             <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($product->id); ?>" <?php echo e(old('product_id', isset($ingredient) ? $ingredient->product_id : '') == $product->id ? 'selected' : ''); ?>>
+                                <option value="<?php echo e($product->id); ?>" <?php echo e(old('product_id', $ingredient->product_id ?? '') == $product->id ? 'selected' : ''); ?>>
                                     <?php echo e($product->name); ?>
 
                                 </option>
@@ -72,39 +72,33 @@ unset($__errorArgs, $__bag); ?>
 
                     <!-- Key-Value Pairs -->
                     <div id="keyValueFields">
-                        <?php if(isset($ingredient) && $ingredient->keys->count() > 0): ?>
-                            <?php $__currentLoopData = $ingredient->keys; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $key): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <div class="mb-3 key-value-pair">
-                                    <label for="key" class="form-label">Key</label>
-                                    <input type="text" name="key[]" class="form-control <?php $__errorArgs = ['key.*'];
+                        <div class="row mb-3 key-value-pair">
+                            <div class="col-md-5">
+                                <label for="key_0" class="form-label">Key</label>
+                                <input type="text" name="key[]" id="key_0" class="form-control <?php $__errorArgs = ['key.0'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('key.'.$index, $key->key)); ?>" required>
-                                    <label for="value" class="form-label">Value</label>
-                                    <input type="text" name="value[]" class="form-control <?php $__errorArgs = ['value.*'];
+unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('key.0', $ingredient->key ?? '')); ?>" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="value_0" class="form-label">Value</label>
+                                <input type="text" name="value[]" id="value_0" class="form-control <?php $__errorArgs = ['value.0'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('value.'.$index, $key->value)); ?>" required>
-                                    <button type="button" class="btn btn-danger btn-sm remove-key-value">Remove</button>
-                                </div>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        <?php else: ?>
-                            <div class="mb-3 key-value-pair">
-                                <label for="key" class="form-label">Key</label>
-                                <input type="text" name="key[]" class="form-control" value="<?php echo e(old('key.0')); ?>" required>
-                                <label for="value" class="form-label">Value</label>
-                                <input type="text" name="value[]" class="form-control" value="<?php echo e(old('value.0')); ?>" required>
+unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('value.0', $ingredient->value ?? '')); ?>" required>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
                                 <button type="button" class="btn btn-danger btn-sm remove-key-value">Remove</button>
                             </div>
-                        <?php endif; ?>
+                        </div>
                     </div>
 
                     <!-- Add More Key-Value Button -->
@@ -129,14 +123,21 @@ unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('value.'.$index, $key->
 <script>
     document.getElementById('addMoreKeyValue').addEventListener('click', function () {
         const keyValueFields = document.getElementById('keyValueFields');
+        const index = keyValueFields.children.length;
         const newField = document.createElement('div');
-        newField.classList.add('mb-3', 'key-value-pair');
+        newField.classList.add('row', 'mb-3', 'key-value-pair');
         newField.innerHTML = `
-            <label for="key" class="form-label">Key</label>
-            <input type="text" name="key[]" class="form-control" required>
-            <label for="value" class="form-label">Value</label>
-            <input type="text" name="value[]"  class="form-control"  required>
-            <button type="button" class="btn btn-danger btn-sm  remove-key-value">Remove</button>
+            <div class="col-md-5">
+                <label for="key_${index}" class="form-label">Key</label>
+                <input type="text" name="key[]" id="key_${index}" class="form-control" required>
+            </div>
+            <div class="col-md-5">
+                <label for="value_${index}" class="form-label">Value</label>
+                <input type="text" name="value[]" id="value_${index}" class="form-control" required>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="btn btn-danger btn-sm remove-key-value">Remove</button>
+            </div>
         `;
         keyValueFields.appendChild(newField);
     });
@@ -147,7 +148,6 @@ unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('value.'.$index, $key->
         }
     });
 </script>
-
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('admin.layout.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\ASUS\Downloads\mark11\resources\views/admin/ingredients/form.blade.php ENDPATH**/ ?>

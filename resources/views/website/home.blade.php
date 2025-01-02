@@ -42,21 +42,19 @@
             </div>
 
             <div class="row">
+                @foreach ($productBanners->reverse()->take(1) as $productBanner)
                 <div class="col-lg-5 mb-10 mb-lg-0" data-animate="fadeInUp">
                     <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
-                        <img class="lazy-image w-100 img-fluid card-img object-fit-cover banner-02"
+                        <img
+                            class="lazy-image w-100 img-fluid card-img object-fit-cover banner-02"
                             src="#"
-                            data-src="{{ asset('assets/website/assets/images/banner/banner-32.jpg') }}"
+                            data-src="{{ asset('storage/' . $productBanner->image_path) }}"
                             width="570"
                             height="913"
-                            alt="Empower Yourself">
-                        <div class="card-img-overlay p-12 m-2 d-inline-flex flex-column justify-content-end">
-                            <h5 class="card-subtitle fw-normal font-primary text-white fs-1 mb-5">Essenstial Items</h5>
-                            <h3 class="card-title mb-0 fs-2 text-white">Empower Yourself</h3>
-                            <div class="mt-10 pt-2"></div>
-                        </div>
+                            alt="Product Banner Image">
                     </div>
                 </div>
+                @endforeach
 
                 <div class="col-lg-7">
                     <div class="row gy-11">
@@ -66,7 +64,7 @@
                                 <figure class="card-img-top position-relative mb-7 overflow-hidden">
                                     <a href="{{ route('product.detail', ['id' => $product->id]) }}" class="hover-zoom-in d-block" title="{{ $product->name }}">
                                         <img src="{{ $product->image_url }}" class="img-fluid lazy-image w-100" alt="{{ $product->name }}" width="330" height="440">
-                                    </a>    
+                                    </a>
                                 </figure>
                                 <div class="card-body text-center p-0">
                                     <!-- Updated Price Display -->
@@ -277,7 +275,7 @@
     <!-- Category Section -->
     <section>
 
-        <div class="container-fluid px-9">  
+        <div class="container-fluid px-9">
             <div class="row gy-30px gx-30px">
                 @foreach ($categories->reverse()->take(3) as $category)
                 <div class="col-12 col-md-4" data-animate="fadeInUp">
@@ -348,7 +346,6 @@
 
     <!-- instagram page  -->
     <section class="bg-section-2 pb-lg-18 pb-16 pt-lg-17 pt-15 mb-4">
-
         <div class="container container-xxl">
             <div class="row align-items-center">
                 <div class="col-md-6 mb-md-9" data-animate="fadeInUp">
@@ -361,74 +358,20 @@
             <div class="mx-n6 slick-slider"
                 data-slick-options='{"slidesToShow": 5,"infinite":false,"autoplay":false,"dots":false,"arrows":false,"responsive":[{"breakpoint": 1366,"settings": {"slidesToShow":5 }},{"breakpoint": 992,"settings": {"slidesToShow":3}},{"breakpoint": 768,"settings": {"slidesToShow": 2}},{"breakpoint": 576,"settings": {"slidesToShow": 2}}]}'>
 
+                @foreach ($instagramImages as $image)
                 <div class="px-6" data-animate="fadeInUp">
-                    <a href="{{ asset('assets/website/assets') }}/images/instagram/instagram-01.jpg" title="instagram-01"
-                        data-gallery="instagram"
-                        class=" hover-zoom-in hover-shine  card-img-overlay-hover hover-zoom-in hover-shine d-block">
+                    <a href="{{ asset('storage/'.$image->image) }}" title="instagram-{{ $loop->index + 1 }}" data-gallery="instagram"
+                        class="hover-zoom-in hover-shine card-img-overlay-hover hover-zoom-in hover-shine d-block">
                         <img class="lazy-image img-fluid w-100" width="314" height="314"
-                            data-src="{{ asset('assets/website/assets') }}/images/instagram/instagram-01-320x320.jpg" alt="instagram-01"
-                            src="#">
+                            data-src="{{ asset('storage/'.$image->image) }}" alt="instagram-{{ $loop->index + 1 }}" src="#">
                         <span class="card-img-overlay bg-dark bg-opacity-30"></span>
                     </a>
                 </div>
+                @endforeach
 
-                <div class="px-6" data-animate="fadeInUp">
-                    <a href="{{ asset('assets/website/assets') }}/images/instagram/instagram-02.jpg" title="instagram-02"
-                        data-gallery="instagram"
-                        class=" hover-zoom-in hover-shine  card-img-overlay-hover hover-zoom-in hover-shine d-block">
-                        <img class="lazy-image img-fluid w-100" width="314" height="314"
-                            data-src="{{ asset('assets/website/assets') }}/images/instagram/instagram-02-320x320.jpg" alt="instagram-02"
-                            src="#">
-                        <span class="card-img-overlay bg-dark bg-opacity-30"></span>
-                    </a>
-                </div>
-                <div class="px-6" data-animate="fadeInUp">
-                    <a href="{{ asset('assets/website/assets') }}/images/instagram/instagram-03.jpg" title="instagram-03"
-                        data-gallery="instagram"
-                        class=" hover-zoom-in hover-shine  card-img-overlay-hover hover-zoom-in hover-shine d-block">
-                        <img class="lazy-image img-fluid w-100" width="314" height="314"
-                            data-src="{{ asset('assets/website/assets') }}/images/instagram/instagram-03-320x320.jpg" alt="instagram-03"
-                            src="#">
-                        <span class="card-img-overlay bg-dark bg-opacity-30"></span>
-                    </a>
-                </div>
-
-                <div class="px-6" data-animate="fadeInUp">
-                    <a href="{{ asset('assets/website/assets') }}/images/instagram/instagram-04.jpg" title="instagram-04"
-                        data-gallery="instagram"
-                        class=" hover-zoom-in hover-shine  card-img-overlay-hover hover-zoom-in hover-shine d-block">
-                        <img class="lazy-image img-fluid w-100" width="314" height="314"
-                            data-src="{{ asset('assets/website/assets') }}/images/instagram/instagram-04-320x320.jpg" alt="instagram-04"
-                            src="#">
-                        <span class="card-img-overlay bg-dark bg-opacity-30"></span>
-                    </a>
-                </div>
-
-                <div class="px-6" data-animate="fadeInUp">
-                    <a href="{{ asset('assets/website/assets') }}/images/instagram/instagram-05.jpg" title="instagram-05"
-                        data-gallery="instagram"
-                        class=" hover-zoom-in hover-shine  card-img-overlay-hover hover-zoom-in hover-shine d-block">
-                        <img class="lazy-image img-fluid w-100" width="314" height="314"
-                            data-src="{{ asset('assets/website/assets') }}/images/instagram/instagram-05-320x320.jpg" alt="instagram-05"
-                            src="#">
-                        <span class="card-img-overlay bg-dark bg-opacity-30"></span>
-                    </a>
-                </div>
-
-                <div class="px-6" data-animate="fadeInUp">
-                    <a href="{{ asset('assets/website/assets') }}/images/instagram/instagram-06.jpg" title="instagram-06"
-                        data-gallery="instagram"
-                        class=" hover-zoom-in hover-shine  card-img-overlay-hover hover-zoom-in hover-shine d-block">
-                        <img class="lazy-image img-fluid w-100" width="314" height="314"
-                            data-src="{{ asset('assets/website/assets') }}/images/instagram/instagram-06-320x320.jpg" alt="instagram-06"
-                            src="#">
-                        <span class="card-img-overlay bg-dark bg-opacity-30"></span>
-                    </a>
-                </div>
             </div>
-
-
         </div>
     </section>
+
 </main>
 @endsection

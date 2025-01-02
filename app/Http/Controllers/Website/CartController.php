@@ -71,41 +71,29 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = Cart::where('user_id', auth()->id())->get();
-        $cartCount = $cartItems->count();
-        return view('website.cart.index', compact('cartItems', 'cartCount'));
+        return view('website.cart.index', compact('cartItems'));
     }
 
     // Delete product from cart
     public function destroy($id)
     {
-        try {
-            $cartItem = Cart::where('user_id', auth()->id())->findOrFail($id);
-            $cartItem->delete();
-
-            // Check if the cart is empty after the deletion
-            $isCartEmpty = Cart::where('user_id', auth()->id())->count() === 0;
-
-            // Refresh the page instead of redirecting
-            return redirect()->back()->with('success', 'Item removed from the cart successfully!');
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to delete item'], 500);
-        }
+        $cartItem = Cart::where('user_id', auth()->id())->findOrFail($id);
+        $cartItem->delete();
+        return redirect()->back()->with('success', 'Item removed from the cart successfully!');
     }
 
     // Update cart item quantity
     public function updateQuantity(Request $request)
     {
-        // Assuming you are saving cart items in the session or database.
-        $cartItems = $request->input('cartItems');
+        $cartItem = Cart::where('user_id', auth()->id())
+            ->where('id', $request->id)
+            ->first();
 
-        foreach ($cartItems as $cartItem) {
-            $item = Cart::find($cartItem['id']);
-            if ($item) {
-                $item->quantity = $cartItem['quantity'];
-                $item->save();
-            }
+        if ($cartItem) {
+            $cartItem->quantity = $request->quantity;
+            $cartItem->save();
         }
 
-        return response()->json(['success' => true, 'cartItems' => $cartItems]);
+        return response()->json(['success' => true]);
     }
 }

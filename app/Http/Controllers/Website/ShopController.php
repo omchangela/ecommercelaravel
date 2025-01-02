@@ -18,56 +18,54 @@ class ShopController extends Controller
      * Display the total number of products.
      */
 
-    public function index(Request $request)
-    {
-        // Fetch categories for the sidebar
-        $categories = Category::all();
-
-        // Fetch the total number of products
-        $totalProducts = Product::count();
-
-        // Start the query for products with eager loading of prices
-        $query = Product::with(['prices'])->select('products.*');
-
-        // Filter by category if provided
-        if ($request->has('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        // Filter by price range if provided
-        if ($request->has('price_range')) {
-            list($minPrice, $maxPrice) = explode('-', $request->price_range);
-            $query->whereHas('prices', function ($q) use ($minPrice, $maxPrice) {
-                $q->whereBetween('price', [(int)$minPrice, (int)$maxPrice]);
-            });
-        }
-
-        // Apply sorting with optimized server-side rendering
-        if ($request->has('orderby')) {
-            switch ($request->orderby) {
-                case 'date':
-                    $query->orderBy('created_at', 'desc');
-                    break;
-                case 'price':
-                    $query->join('prices', 'products.id', '=', 'prices.product_id')
-                        ->orderBy('prices.price', 'asc');
-                    break;
-                case 'price-desc':
-                    $query->join('prices', 'products.id', '=', 'prices.product_id')
-                        ->orderBy('prices.price', 'desc');
-                    break;
-            }
-        }
-
-        // Paginate the results
-        $products = $query->paginate(12)->appends($request->all());
-
-
-        
-
-        // Return the main view with data
-        return view('website.shop.index', compact('products', 'categories', 'totalProducts'));
-    }
+     public function index(Request $request)
+     {
+         // Fetch categories for the sidebar
+         $categories = Category::all();
+     
+         // Start the query for products with eager loading of prices
+         $query = Product::with(['prices'])->select('products.*');
+     
+         // Filter by category if provided
+         if ($request->has('category')) {
+             $query->where('category_id', $request->category);
+         }
+     
+         // Filter by price range if provided
+         if ($request->has('price_range')) {
+             list($minPrice, $maxPrice) = explode('-', $request->price_range);
+             $query->whereHas('prices', function ($q) use ($minPrice, $maxPrice) {
+                 $q->whereBetween('price', [(int)$minPrice, (int)$maxPrice]);
+             });
+         }
+     
+         // Apply sorting with optimized server-side rendering
+         if ($request->has('orderby')) {
+             switch ($request->orderby) {
+                 case 'date':
+                     $query->orderBy('created_at', 'desc');
+                     break;
+                 case 'price':
+                     $query->join('prices', 'products.id', '=', 'prices.product_id')
+                         ->orderBy('prices.price', 'asc');
+                     break;
+                 case 'price-desc':
+                     $query->join('prices', 'products.id', '=', 'prices.product_id')
+                         ->orderBy('prices.price', 'desc');
+                     break;
+             }
+         }
+     
+         // Get the filtered total number of products
+         $totalProducts = $query->count();
+     
+         // Paginate the results
+         $products = $query->paginate(12)->appends($request->all());
+     
+         // Return the main view with data
+         return view('website.shop.index', compact('products', 'categories', 'totalProducts'));
+     }
+     
 
 
     /**

@@ -5,9 +5,13 @@ use App\Http\Controllers\Website\WishlistController;
 use App\Http\Controllers\Website\CartController;
 use App\Http\Controllers\Website\ReviewController;
 use App\Http\Controllers\Website\ProductController;
-use App\Http\Controllers\Website\CheckoutController;
 use App\Http\Controllers\Website\ProfileController;
 use App\Http\Controllers\Website\ShopController;
+use App\Http\Controllers\Website\InstagramController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CheckoutController;
+
+
 use Illuminate\Support\Facades\Route;
 // Home and Shop Routes
 Route::get('/', [App\Http\Controllers\Website\HomeController::class, 'home'])->name('home');
@@ -42,10 +46,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/reviews/{id}/dislike', [ReviewController::class, 'dislike']);
 
     // Checkout Routes
-    Route::get('/checkout', [CheckoutController::class, 'showCheckoutForm'])->name('checkout.form');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::post('/checkout/verifyPayment', [CheckoutController::class, 'verifyPayment'])->name('checkout.verifyPayment');
-    Route::post('/checkout/createOrder', [CheckoutController::class, 'createOrder'])->name('createOrder');
-    Route::post('/payment-success', [CheckoutController::class, 'paymentSuccess'])->name('checkout.paymentSuccess');
-    Route::get('/checkout/success', fn() => view('checkout.success'))->name('checkout.success');
+    Route::post('/create-order', [PaymentController::class, 'createOrder'])->name('payment.createOrder');
+Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('payment.callback');
+Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/payment-status', function () {
+    return view('payment-status');
+})->name('payment.status');
+
 });

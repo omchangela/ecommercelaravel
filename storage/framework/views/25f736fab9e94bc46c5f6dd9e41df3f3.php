@@ -59,5 +59,4 @@
     });
 </script>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('admin.layout.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\ASUS\Downloads\mark11\resources\views/admin/ingredients/index.blade.php ENDPATH**/ ?>

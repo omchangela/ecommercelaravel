@@ -79,18 +79,43 @@ class IngredientController extends Controller
      * Show the form for editing the specified ingredient.
      */
     public function edit($id)
-{
-    $ingredient = Ingredient::findOrFail($id);  // Find ingredient by ID
-    $products = Product::all();  // Fetch all products
-    return view('admin.ingredients.form', compact('ingredient', 'products'));
-}
+    {
+        $ingredient = Ingredient::findOrFail($id);  // Find ingredient by ID
+        $products = Product::all();  // Fetch all products
+        return view('admin.ingredients.form', compact('ingredient', 'products'));
+    }
 
 
 
     /**
      * Update the specified ingredient in storage.
      */
-    
+    public function update(Request $request, $id)
+{
+    // Convert 'key' and 'value' to strings
+    $keys = is_array($request->key) ? implode(',', $request->key) : strval($request->key);
+    $values = is_array($request->value) ? implode(',', $request->value) : strval($request->value);
+
+    // Validate the input fields after conversion
+    $request->validate([
+        'product_id' => 'required|exists:products,id',
+        'key' => 'required|max:255',
+        'value' => 'required', // Ensure 'value' is treated as a string
+    ]);
+
+    // Find the ingredient by ID
+    $ingredient = Ingredient::findOrFail($id);
+
+    // Update the ingredient with the converted values
+    $ingredient->update([
+        'product_id' => $request->product_id,
+        'key' => $keys,
+        'value' => $values,
+    ]);
+
+    return redirect()->route('admin.ingredients.index')->with('success', 'Ingredient updated successfully!');
+}
+
 
 
 

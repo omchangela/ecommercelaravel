@@ -39,6 +39,7 @@
     <script src="<?php echo e(asset('assets/admin')); ?>/demo/pages/extra_noty.js"></script>
 
     <script src="<?php echo e(asset('assets/admin')); ?>/js/custom.js"></script>
+    
 </head>
 
 <body>

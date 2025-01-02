@@ -92,19 +92,22 @@
                         
                     </a>
                 </li>
-
-                <li class="nav-item nav-item-submenu <?php echo e(!empty($menu) && $menu == 'mainmenu' ? ' nav-item-expanded nav-item-open' : ''); ?>">
-                    <a href="#" class="nav-link">
-                        <i class="ph-layout"></i>
-                        <span>Main Menu</span>
+                <li class="nav-item">
+                    <a href="<?php echo e(url('admin/instagram')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'instagram' ? 'active' : ''); ?>">
+                        <i class="ph-rows"></i>
+                        <span>Instagram Images</span>
+                        
                     </a>
-                    <ul class="nav-group-sub collapse <?php echo e(!empty($menu) && $menu == 'mainmenu' ? ' show' : ''); ?>">
-                        <li class="nav-item"><a href="#" class="nav-link <?php echo e(!empty($menu) && $menu == 'submenu' ? 'active' : ''); ?>">Sub menu 1</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Sub menu 2</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Sub menu 3</a></li>
-
-                    </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="<?php echo e(url('admin/product_banners')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'product_banners' ? 'active' : ''); ?>">
+                        <i class="ph-rows"></i>
+                        <span> Main Product Banners</span>
+                        
+                    </a>
+                </li>
+
+                
 
                 
                     

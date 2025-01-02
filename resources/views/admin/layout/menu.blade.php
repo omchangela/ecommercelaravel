@@ -92,19 +92,22 @@
                         {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
                     </a>
                 </li>
-
-                <li class="nav-item nav-item-submenu {{ !empty($menu) && $menu == 'mainmenu' ? ' nav-item-expanded nav-item-open' : '' }}">
-                    <a href="#" class="nav-link">
-                        <i class="ph-layout"></i>
-                        <span>Main Menu</span>
+                <li class="nav-item">
+                    <a href="{{ url('admin/instagram') }}" class="nav-link {{ !empty($menu) && $menu == 'instagram' ? 'active' : '' }}">
+                        <i class="ph-rows"></i>
+                        <span>Instagram Images</span>
+                        {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
                     </a>
-                    <ul class="nav-group-sub collapse {{ !empty($menu) && $menu == 'mainmenu' ? ' show' : '' }}">
-                        <li class="nav-item"><a href="#" class="nav-link {{ !empty($menu) && $menu == 'submenu' ? 'active' : '' }}">Sub menu 1</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Sub menu 2</a></li>
-                        <li class="nav-item"><a href="#" class="nav-link">Sub menu 3</a></li>
-
-                    </ul>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ url('admin/product_banners') }}" class="nav-link {{ !empty($menu) && $menu == 'product_banners' ? 'active' : '' }}">
+                        <i class="ph-rows"></i>
+                        <span> Main Product Banners</span>
+                        {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
+                    </a>
+                </li>
+
+                
 
                 {{--<li class="nav-item ">--}}
                     {{--<a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="dropdown-item text-danger">--}}

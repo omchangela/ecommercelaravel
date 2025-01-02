@@ -38,17 +38,7 @@
                     <tr class="border">
                         <th scope="row" class="ps-xl-10 py-6 d-flex align-items-center border-0">
                             <!-- Delete button -->
-                            <a href="#" class="d-block text-muted fw-lighter"
-                                onclick="event.preventDefault(); document.getElementById('delete-wishlist-{{ $wishlist->id }}').submit();">
-                                <i class="fas fa-times"></i>
-                            </a>
-                            <form id="delete-wishlist-{{ $wishlist->id }}"
-                                action="{{ route('wishlist.remove', $wishlist->id) }}?return={{ request()->fullUrl() }}"
-                                method="POST" style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-
+                            
 
                             <!-- Product details -->
                             <div class="d-flex align-items-center">

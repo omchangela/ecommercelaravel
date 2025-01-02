@@ -15,7 +15,7 @@
         <form action="{{ isset($ingredient) ? route('admin.ingredients.update', $ingredient->id) : route('admin.ingredients.store') }}" method="POST">
             @csrf
             @if(isset($ingredient))
-                @method('PUT') <!-- Indicate the method for updating -->
+                @method('PUT')
             @endif
 
             <div class="card">
@@ -26,26 +26,26 @@
 
                     <!-- Validation errors -->
                     @if ($errors->any())
-                    <div id="validation-errors" class="message-section">
-                        <div class="alert alert-danger alert-dismissible">
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            <h5><i class="icon fas fa-ban"></i> Validation Error!</h5>
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                        <div id="validation-errors" class="message-section">
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <h5><i class="icon fas fa-ban"></i> Validation Error!</h5>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                    </div>
                     @endif
 
                     <!-- Product Field -->
                     <div class="mb-3">
                         <label for="product_id" class="form-label">Product</label>
-                        <select name="product_id" id="product_id" class="form-select @error('product_id') is-invalid @enderror">
+                        <select name="product_id" id="product_id" class="form-select @error('product_id') is-invalid @enderror" required>
                             <option value="">Select Product</option>
                             @foreach ($products as $product)
-                                <option value="{{ $product->id }}" {{ old('product_id', isset($ingredient) ? $ingredient->product_id : '') == $product->id ? 'selected' : '' }}>
+                                <option value="{{ $product->id }}" {{ old('product_id', $ingredient->product_id ?? '') == $product->id ? 'selected' : '' }}>
                                     {{ $product->name }}
                                 </option>
                             @endforeach
@@ -57,25 +57,19 @@
 
                     <!-- Key-Value Pairs -->
                     <div id="keyValueFields">
-                        @if(isset($ingredient) && $ingredient->keys->count() > 0)
-                            @foreach($ingredient->keys as $index => $key)
-                                <div class="mb-3 key-value-pair">
-                                    <label for="key" class="form-label">Key</label>
-                                    <input type="text" name="key[]" class="form-control @error('key.*') is-invalid @enderror" value="{{ old('key.'.$index, $key->key) }}" required>
-                                    <label for="value" class="form-label">Value</label>
-                                    <input type="text" name="value[]" class="form-control @error('value.*') is-invalid @enderror" value="{{ old('value.'.$index, $key->value) }}" required>
-                                    <button type="button" class="btn btn-danger btn-sm remove-key-value">Remove</button>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="mb-3 key-value-pair">
-                                <label for="key" class="form-label">Key</label>
-                                <input type="text" name="key[]" class="form-control" value="{{ old('key.0') }}" required>
-                                <label for="value" class="form-label">Value</label>
-                                <input type="text" name="value[]" class="form-control" value="{{ old('value.0') }}" required>
+                        <div class="row mb-3 key-value-pair">
+                            <div class="col-md-5">
+                                <label for="key_0" class="form-label">Key</label>
+                                <input type="text" name="key[]" id="key_0" class="form-control @error('key.0') is-invalid @enderror" value="{{ old('key.0', $ingredient->key ?? '') }}" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="value_0" class="form-label">Value</label>
+                                <input type="text" name="value[]" id="value_0" class="form-control @error('value.0') is-invalid @enderror" value="{{ old('value.0', $ingredient->value ?? '') }}" required>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
                                 <button type="button" class="btn btn-danger btn-sm remove-key-value">Remove</button>
                             </div>
-                        @endif
+                        </div>
                     </div>
 
                     <!-- Add More Key-Value Button -->
@@ -100,14 +94,21 @@
 <script>
     document.getElementById('addMoreKeyValue').addEventListener('click', function () {
         const keyValueFields = document.getElementById('keyValueFields');
+        const index = keyValueFields.children.length;
         const newField = document.createElement('div');
-        newField.classList.add('mb-3', 'key-value-pair');
+        newField.classList.add('row', 'mb-3', 'key-value-pair');
         newField.innerHTML = `
-            <label for="key" class="form-label">Key</label>
-            <input type="text" name="key[]" class="form-control" required>
-            <label for="value" class="form-label">Value</label>
-            <input type="text" name="value[]"  class="form-control"  required>
-            <button type="button" class="btn btn-danger btn-sm  remove-key-value">Remove</button>
+            <div class="col-md-5">
+                <label for="key_${index}" class="form-label">Key</label>
+                <input type="text" name="key[]" id="key_${index}" class="form-control" required>
+            </div>
+            <div class="col-md-5">
+                <label for="value_${index}" class="form-label">Value</label>
+                <input type="text" name="value[]" id="value_${index}" class="form-control" required>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="btn btn-danger btn-sm remove-key-value">Remove</button>
+            </div>
         `;
         keyValueFields.appendChild(newField);
     });
@@ -118,5 +119,4 @@
         }
     });
 </script>
-
 @endsection

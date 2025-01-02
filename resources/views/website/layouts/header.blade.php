@@ -116,7 +116,7 @@
 						</div>
 
 						<div class="px-5 d-none d-xl-inline-block">
-							<a class="position-relative lh-1 color-inherit text-decoration-none" href="/cart" data-bs-toggle="offcanvas"
+							<a class="position-relative lh-1 color-inherit text-decoration-none" href="#" data-bs-toggle="offcanvas"
 								data-bs-target="#shoppingCart"
 								aria-controls="shoppingCart"
 								aria-expanded="false">
@@ -240,93 +240,7 @@
 			<table class="table table-borderless">
 				<tbody>
 					@forelse ($cartItems as $item)
-					<script>
-						document.addEventListener('DOMContentLoaded', () => {
-							const cartItems = document.querySelectorAll('.cart-item');
-							const cartTotalElement = document.getElementById('cart-total');
-							const checkoutButton = document.getElementById('checkoutButton');
 
-							// Function to update the cart total
-							const updateCart = () => {
-								let total = 0;
-
-								cartItems.forEach(item => {
-									const price = parseFloat(item.dataset.price) || 0;
-									const quantityInput = item.querySelector('.item-quantity');
-									const quantity = parseInt(quantityInput.value) || 0;
-									const itemTotal = price * quantity;
-
-									// Update the item total in the UI
-									item.querySelector('.item-total').textContent = `₹${itemTotal.toFixed(2)}`;
-									total += itemTotal;
-								});
-
-								// Update the cart total in the UI
-								cartTotalElement.textContent = `₹${total.toFixed(2)}`;
-							};
-
-							// Add event listeners to increment, decrement, and quantity input fields
-							cartItems.forEach(item => {
-								const quantityInput = item.querySelector('.item-quantity');
-								const decrementBtn = item.querySelector('.decrement-btn');
-								const incrementBtn = item.querySelector('.increment-btn');
-
-								decrementBtn.addEventListener('click', (e) => {
-									e.preventDefault();
-									let value = parseInt(quantityInput.value) || 0;
-									if (value > 1) {
-										quantityInput.value = value - 1;
-										updateCart();
-									}
-								});
-
-								incrementBtn.addEventListener('click', (e) => {
-									e.preventDefault();
-									let value = parseInt(quantityInput.value) || 0;
-									quantityInput.value = value + 1;
-									updateCart();
-								});
-
-								quantityInput.addEventListener('input', updateCart);
-							});
-
-							// Handle checkout button click
-							checkoutButton.addEventListener('click', (e) => {
-								e.preventDefault();
-
-								const cartData = Array.from(cartItems).map(item => ({
-									id: item.dataset.id,
-									quantity: item.querySelector('.item-quantity').value
-								}));
-
-								fetch('{{ route("cart.updateQuantity") }}', {
-										method: 'POST',
-										headers: {
-											'Content-Type': 'application/json',
-											'X-CSRF-TOKEN': '{{ csrf_token() }}'
-										},
-										body: JSON.stringify({
-											cartItems: cartData
-										})
-									})
-									.then(response => response.json())
-									.then(data => {
-										if (data.success) {
-											window.location.href = '{{ route("checkout.store") }}';
-										} else {
-											alert('Failed to update the cart. Please try again.');
-										}
-									})
-									.catch(error => {
-										console.error('Error updating the cart:', error);
-										alert('An error occurred. Please try again.');
-									});
-							});
-
-							// Initial cart update on page load
-							updateCart();
-						});
-					</script>
 
 					<tr class="position-relative cart-item" data-price="{{ $item->price }}" data-id="{{ $item->id }}">
 						<td class="align-middle text-center">
@@ -359,12 +273,12 @@
 								<button class="border-0 shop-down position-absolute z-index-2 decrement-btn">
 									<i class="far fa-minus"></i>
 								</button>
-								<input name="quantity[]" type="number" class="form-control form-control-sm px-6 py-4 fs-6 text-center border-0 item-quantity" disabled  value="{{ $item->quantity }}" required>
+								<input name="quantity[]" type="number" class="form-control form-control-sm px-6 py-4 fs-6 text-center border-0 item-quantity" disabled value="{{ $item->quantity }}" required>
 								<button class="border-0 shop-up position-absolute z-index-2 increment-btn">
 									<i class="far fa-plus"></i>
 								</button>
 							</div>
-							
+
 						</td>
 					</tr>
 
@@ -389,6 +303,7 @@
 		<a href="{{ route('checkout.store') }}" class="btn btn-dark w-100 mb-7" title="Check Out" id="checkoutButton">Check Out</a>
 		<a href="/shop" class="btn btn-outline-dark w-100" title="Continue Shopping">Continue Shopping</a>
 	</div>
+
 </div>
 
 
@@ -399,6 +314,75 @@
 		title="Back To Top" style="--square-size: 48px"><i class="fa-solid fa-arrow-up"></i></a>
 </div>
 
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const cartItems = document.querySelectorAll('.cart-item');
+		const cartTotalElement = document.getElementById('cart-total');
+
+		const updateCartTotal = () => {
+			let total = 0;
+			cartItems.forEach(item => {
+				const quantity = parseInt(item.querySelector('.item-quantity').value);
+				const price = parseFloat(item.dataset.price);
+				total += quantity * price;
+			});
+			cartTotalElement.textContent = `₹${total.toFixed(2)}`;
+		};
+
+		cartItems.forEach(item => {
+			const decrementBtn = item.querySelector('.decrement-btn');
+			const incrementBtn = item.querySelector('.increment-btn');
+			const quantityInput = item.querySelector('.item-quantity');
+			const itemTotal = item.querySelector('.item-total');
+			const itemPrice = parseFloat(item.dataset.price);
+
+			const updateCartItem = async (id, quantity) => {
+				try {
+					const response = await fetch('/cart/update-quantity', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+						},
+						body: JSON.stringify({
+							id,
+							quantity
+						})
+					});
+					const data = await response.json();
+					if (!data.success) {
+						alert('Failed to update cart');
+					}
+				} catch (error) {
+					console.error('Error updating cart:', error);
+				}
+			};
+
+			decrementBtn.addEventListener('click', () => {
+				let quantity = parseInt(quantityInput.value);
+				if (quantity > 1) {
+					quantity--;
+					quantityInput.value = quantity;
+					itemTotal.textContent = `₹${(quantity * itemPrice).toFixed(2)}`;
+					updateCartItem(item.dataset.id, quantity);
+					updateCartTotal();
+				}
+			});
+
+			incrementBtn.addEventListener('click', () => {
+				let quantity = parseInt(quantityInput.value);
+				quantity++;
+				quantityInput.value = quantity;
+				itemTotal.textContent = `₹${(quantity * itemPrice).toFixed(2)}`;
+				updateCartItem(item.dataset.id, quantity);
+				updateCartTotal();
+			});
+		});
+
+		// Initial calculation of total
+		updateCartTotal();
+	});
+</script>
 
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">

@@ -78,8 +78,9 @@
                 </div>
 
                 <nav class="d-flex mt-13 pt-3 justify-content-center" aria-label="pagination" data-animate="fadeInUp" id="pagination">
-                    {{ $products->links('vendor.pagination.bootstrap-5') }}
-                </nav>
+    {{ $products->links('vendor.pagination.bootstrap-5') }}
+</nav>
+
             </div>
 
             <div class="col-lg-3 d-lg-block d-none">
