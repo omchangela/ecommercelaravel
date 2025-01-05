@@ -106,6 +106,27 @@
                         {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ url('admin/orders') }}" class="nav-link {{ !empty($menu) && $menu == 'orders' ? 'active' : '' }}">
+                        <i class="ph-rows"></i>
+                        <span> orders </span>
+                        {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url('admin/orderproducts') }}" class="nav-link {{ !empty($menu) && $menu == 'orderproducts' ? 'active' : '' }}">
+                        <i class="ph-rows"></i>
+                        <span> orderproducts </span>
+                        {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url('admin/payments') }}" class="nav-link {{ !empty($menu) && $menu == 'payments' ? 'active' : '' }}">
+                        <i class="ph-rows"></i>
+                        <span> payments </span>
+                        {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
+                    </a>
+                </li>
 
                 
 

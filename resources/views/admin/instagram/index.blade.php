@@ -30,33 +30,31 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($images as $image)
-                <tr>
-                    <td>{{ $image->id }}</td>
-                    <td><img src="{{ asset('storage/' . $image->image) }}" alt="Instagram Image" width="100"></td>
-                    <td>{{ $image->created_at->format('d-m-Y H:i') }}</td>
-                    <td class="text-center">
-                        <a href="{{ route('admin.instagram.edit', $image->id) }}" class="btn btn-warning btn-sm"> Edit</a>
-                        <form action="{{ route('admin.instagram.destroy', $image->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this image?')"> Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4" class="text-center">No images found.</td>
-                </tr>
-                @endforelse
+                <!-- Data will be loaded dynamically via DataTables -->
             </tbody>
         </table>
 
-        <!-- Pagination Links -->
-        <div class="d-flex justify-content-center mt-4">
-            {{ $images->links('vendor.pagination.bootstrap-4') }}
-        </div>
+        
     </div>
 </div>
 <!-- /content area -->
+@endsection
+
+@section('js')
+<script>
+    $(document).ready(function() {
+        var oTable = $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route('admin.instagram.index') }}', // Your route
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'image', name: 'image', orderable: false, searchable: false },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            pageLength: 10,
+        });
+    });
+</script>
 @endsection

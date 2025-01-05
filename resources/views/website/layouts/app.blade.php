@@ -10,7 +10,7 @@
     <title>Glowing Ecommerce</title>
     <link rel="icon" href="{{ asset('assets/website/assets') }}/images/others/favicon.ico">
     <meta name="csrf-token" content="{{ csrf_token() }}">
- 
+
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/vendors/lightgallery/css/lightgallery-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/vendors/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/website/assets') }}/vendors/animate/animate.min.css">

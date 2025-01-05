@@ -20,42 +20,39 @@
 <!-- Content area -->
 <div class="content">
     <div class="card">
-        <table class="table table-sm table-striped table-bordered mt-3">
+        <table id="productBannersTable" class="table table-sm table-striped table-bordered mt-3">
             <thead>
                 <tr class="bg-secondary text-light table-border-double">
                     <th>ID</th>
                     <th>Image</th>
+                    <th>Created At</th> <!-- New column for Created At -->
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($banners as $banner)
-                <tr>
-                    <td>{{ $banner->id }}</td>
-                    <td><img src="{{ asset('storage/' . $banner->image_path) }}" width="100" /></td>
-                    <td class="text-center">
-                        <a href="{{ route('admin.product_banners.edit', $banner->id) }}" class="btn btn-warning btn-sm"> Edit</a>
-                        <form action="{{ route('admin.product_banners.destroy', $banner->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"> Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3" class="text-center">No banners found.</td>
-                </tr>
-                @endforelse
+                <!-- Data will be loaded dynamically via DataTables -->
             </tbody>
         </table>
-
-        <!-- Pagination Links -->
-        <div class="d-flex justify-content-center mt-4">
-            {{ $banners->links('vendor.pagination.bootstrap-4') }}
-            
-        </div>
     </div>
 </div>
 <!-- /content area -->
+@endsection
+
+@section('js')
+<script>
+    $(document).ready(function() {
+        var oTable = $('#productBannersTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route('admin.product_banners.index') }}', // Your route
+            columns: [
+                { data: 'id', name: 'id' },
+                { data: 'image', name: 'image', orderable: false, searchable: false },
+                { data: 'created_at', name: 'created_at' }, // Added column for Created At
+                { data: 'action', name: 'action', orderable: false, searchable: false }
+            ],
+            pageLength: 10,
+        });
+    });
+</script>
 @endsection

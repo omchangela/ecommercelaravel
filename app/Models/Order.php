@@ -16,6 +16,12 @@ class Order extends Model
         'total_amount',
         'status',
         'payment_id',
+        'shipping_name',
+        'shipping_address',
+        'shipping_city',
+        'shipping_state',
+        'shipping_zip',
+        'shipping_country',
     ];
     public function products()
     {

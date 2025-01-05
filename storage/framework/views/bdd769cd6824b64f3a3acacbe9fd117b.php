@@ -15,10 +15,10 @@
 
 
 				<a href="/" class="navbar-brand has-sticky-logo py-4 mx-auto w-xl-50">
-					<img class="light-mode-img" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates">
-					<img class="dark-mode-img" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo-white.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates">
-					<img class="sticky-logo sticky-logo-light" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates">
-					<img class="sticky-logo sticky-logo-dark" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo-white.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates">
+					<img class="light-mode-img " style="padding-left: 40px;" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo2.png" width="130" height="46" alt="Glowing - Bootstrap 5 HTML Templates">
+					<!-- <img class="dark-mode-img" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo-white.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates"> -->
+					<img class="sticky-logo sticky-logo-light" style="padding-left: 40px;" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo2.png" width="130" height="46" alt="Glowing - Bootstrap 5 HTML Templates">
+					<!-- <img class="sticky-logo sticky-logo-dark" src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo-white.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates"> -->
 
 					<div class="d-none d-xl-flex w-xl-50">
 						<ul class="navbar-nav">

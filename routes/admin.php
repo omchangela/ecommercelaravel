@@ -11,6 +11,9 @@ use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\HowToUseController;
 use App\Http\Controllers\Admin\InstagramShowcaseController;
 use App\Http\Controllers\Admin\ProductBannerController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\OrderProductsController;
+use App\Http\Controllers\Admin\PaymentController;
 
 Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -61,6 +64,9 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     Route::resource('instagram', InstagramShowcaseController::class);
     Route::resource('product_banners', ProductBannerController::class);
+    Route::resource('orders', OrderController::class);
+    Route::resource('orderproducts', OrderProductsController::class);
+    Route::resource('payments', PaymentController::class);
 
 });
 

@@ -8,8 +8,10 @@ use App\Http\Controllers\Website\ProductController;
 use App\Http\Controllers\Website\ProfileController;
 use App\Http\Controllers\Website\ShopController;
 use App\Http\Controllers\Website\InstagramController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\CheckoutController;
+
+use App\Http\Controllers\website\CheckoutController;
+use App\Http\Controllers\website\PaymentController;
+
 
 
 use Illuminate\Support\Facades\Route;
@@ -46,12 +48,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/reviews/{id}/dislike', [ReviewController::class, 'dislike']);
 
     // Checkout Routes
-    Route::post('/create-order', [PaymentController::class, 'createOrder'])->name('payment.createOrder');
-Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('payment.callback');
-Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-Route::get('/payment-status', function () {
-    return view('payment-status');
-})->name('payment.status');
-
+    Route::post('/create-order', [PaymentController::class, 'createOrder']);
+    Route::post('/payment-callback', [PaymentController::class, 'paymentCallback'])->name('payment.callback');
+    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/payment-status', function () {
+        return view('payment-status');
+    })->name('payment.status');
 });

@@ -106,6 +106,27 @@
                         
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="<?php echo e(url('admin/orders')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'orders' ? 'active' : ''); ?>">
+                        <i class="ph-rows"></i>
+                        <span> orders </span>
+                        
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo e(url('admin/orderproducts')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'orderproducts' ? 'active' : ''); ?>">
+                        <i class="ph-rows"></i>
+                        <span> orderproducts </span>
+                        
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?php echo e(url('admin/payments')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'payments' ? 'active' : ''); ?>">
+                        <i class="ph-rows"></i>
+                        <span> payments </span>
+                        
+                    </a>
+                </li>
 
                 
 

@@ -6,15 +6,37 @@ use App\Http\Controllers\Controller;
 use App\Models\InstagramShowcase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 
 class InstagramShowcaseController extends Controller
 {
     // Display all images
-    public function index()
-    {
-        $images = InstagramShowcase::paginate(10);
-        return view('admin.instagram.index', compact('images'));
+    public function index(Request $request)
+{
+    if ($request->ajax()) {
+        $images = InstagramShowcase::select('id', 'image', 'created_at');
+        
+        return DataTables::of($images)
+            ->addColumn('image', function ($image) {
+                return '<img src="' . asset('storage/' . $image->image) . '" width="100" />';
+            })
+            ->addColumn('created_at', function ($image) {
+                return $image->created_at->format('d-m-Y H:i');
+            })
+            ->addColumn('action', function ($image) {
+                return '<a href="' . route('admin.instagram.edit', $image->id) . '" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="' . route('admin.instagram.destroy', $image->id) . '" method="POST" style="display:inline;" onsubmit="return confirm(\'Are you sure?\')">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>';
+            })
+            ->rawColumns(['image', 'action'])
+            ->make(true);
     }
+
+    return view('admin.instagram.index');
+}
 
     // Show the form to create a new image
     public function create()

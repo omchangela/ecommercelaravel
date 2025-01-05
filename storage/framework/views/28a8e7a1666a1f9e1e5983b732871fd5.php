@@ -101,7 +101,7 @@
                 <a class="d-inline-block" href="./">
 
 
-                    <img class="lazy-image img-fluid light-mode-img" src="#" data-src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates">
+                    <img class="lazy-image img-fluid light-mode-img" src="#" data-src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo2.png" width="150" height="46" alt="Glowing - Bootstrap 5 HTML Templates">
                     <img class="lazy-image dark-mode-img img-fluid" src="#" data-src="<?php echo e(asset('assets/website/assets')); ?>/images/others/logo-white.png" width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates">
                 </a>
             </div>
