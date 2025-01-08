@@ -1,6 +1,7 @@
 
 <?php
 
+use App\Http\Controllers\Website\ReturnController;
 use App\Http\Controllers\Website\WishlistController;
 use App\Http\Controllers\Website\CartController;
 use App\Http\Controllers\Website\ReviewController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\Website\InstagramController;
 
 use App\Http\Controllers\website\CheckoutController;
 use App\Http\Controllers\website\PaymentController;
+use App\Http\Controllers\Website\PrivacyController;
+use App\Http\Controllers\Website\TermsController;
 
 
 
@@ -19,6 +22,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\Website\HomeController::class, 'home'])->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/productdetail/{id}', [ShopController::class, 'productDetail'])->name('product.detail');
+
+
+Route::get('/pages/terms', [TermsController::class, 'showTerms'])->name('terms');
+Route::get('/pages/privacy', [PrivacyController::class, 'showprivacy'])->name('privacy');
+Route::get('/pages/returnpolicy', [ReturnController::class, 'showreturnpolicy'])->name('returnpolicy');
 
 // Authenticated User Routes
 Route::middleware('auth')->group(function () {
@@ -55,4 +63,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment-status', function () {
         return view('payment-status');
     })->name('payment.status');
+
+    
 });

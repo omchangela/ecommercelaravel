@@ -50,13 +50,16 @@ class CategoryController extends Controller
                         ? '<img src="' . asset('storage/' . $record->image) . '" width="100" alt="Image">' 
                         : 'No Image';
                 })
-                ->addColumn('status', function ($record) {
-                    return html()->select('status', Variable::$status)->value($record['status'])
-                        ->attributes(['data-id' => $record->id])
-                        ->class(['update_field', 'form-select', 'form-select-sm', 
-                            'text-success' => ($record['status'] == "Active"), 
-                            'text-warning' => ($record['status'] == "Inactive")]);
+                ->editColumn('status', function ($record) {
+                    $options = '';
+                    foreach (Variable::$status as $key => $value) {
+                        $selected = $record->status === $key ? 'selected' : '';
+                        $options .= "<option value='{$key}' {$selected}>{$value}</option>";
+                    }
+                
+                    return "<select class='update_field form-select form-select-sm' data-id='{$record->id}'>{$options}</select>";
                 })
+                
                 ->addColumn('action', function ($record) {
                     return 
                         '<button data-url="' . route($this->data['route'] . 'edit', $record->id) . '" class="btn btn-teal btn-sm ajax_insert_update" title="Edit" data-method="GET">Edit</button>' .
@@ -110,32 +113,26 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        $record = Category::findOrFail($id);
+    public function update(Request $request, $id)
+{
+    $category = Category::findOrFail($id);
 
-        $validator = $this->_validate($request);
-        if ($validator->fails()) {
-            return Response::json(['result' => '0', 'message' => $validator->errors()->first(), 'errors' => $validator->errors()], 403);
-        }
-
-        $inputs = $request->all();
-
-        // Handle file upload
-        if ($request->hasFile('image')) {
-            // Delete the old image
-            if ($record->image && Storage::disk('public')->exists($record->image)) {
-                Storage::disk('public')->delete($record->image);
-            }
-
-            // Store the new image
-            $inputs['image'] = $request->file('image')->store('categories', 'public');
-        }
-
-        $record->update($inputs);
-
-        return Response::json(['result' => '1', 'message_type' => 'info', 'message' => $this->data['title'] . ' updated successfully.'], 200);
+    if ($request->quick_update === 'yes') {
+        $category->update(['status' => $request->status]);
+        return response()->json([
+            'message' => 'Status updated successfully!',
+            'message_type' => 'success'
+        ]);
     }
+
+    // Other update logic if not a quick update
+    $category->update($request->all());
+    return response()->json([
+        'message' => 'Category updated successfully!',
+        'message_type' => 'success'
+    ]);
+}
+
 
     /**
      * Remove the specified resource from storage.
@@ -153,4 +150,13 @@ class CategoryController extends Controller
 
         return Response::json(['result' => 'success', 'message_type' => 'danger', 'message' => 'Deleted Data successfully!']);
     }
+
+    protected static function booted()
+{
+    static::saving(function ($category) {
+        if (!in_array($category->status, Variable::$status)) {
+            throw new \Exception('Invalid status value');
+        }
+    });
+}
 }

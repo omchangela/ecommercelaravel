@@ -48,7 +48,7 @@
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'image', name: 'image', orderable: false, searchable: false },
-                { data: 'created_at', name: 'created_at',searchable: true }, // Added column for Created At
+                { data: 'created_at', name: 'created_at' }, // Added column for Created At
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             pageLength: 10,

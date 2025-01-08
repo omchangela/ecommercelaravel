@@ -16,9 +16,7 @@ class CreateOrderProductsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
-            $table->timestamps();
-
-            
+            $table->timestamps();  
         });
     }
 

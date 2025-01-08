@@ -128,7 +128,34 @@
                     </a>
                 </li>
 
-                
+                <!-- <li class="nav-item">
+                    <a href="{{ url('admin/privacy') }}" class="nav-link {{ !empty($menu) && $menu == 'privacy' ? 'active' : '' }}">
+                        <i class="ph-rows"></i>
+                        <span> privacy & Policy</span>
+                        {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ url('admin/terms') }}" class="nav-link {{ !empty($menu) && $menu == 'terms' ? 'active' : '' }}">
+                        <i class="ph-rows"></i>
+                        <span> Terms </span>
+                        {{--<span class="badge bg-primary align-self-center rounded-pill ms-auto">4.0</span>--}}
+                    </a>
+                </li> -->
+
+                <li class="nav-item nav-item-submenu {{ !empty($menu) && $menu == 'pages' ? ' nav-item-expanded nav-item-open' : '' }}">
+                    <a href="#" class="nav-link">
+                        <i class="ph-layout"></i>
+                        <span>pages</span>
+                    </a>
+                    <ul class="nav-group-sub collapse {{ !empty($menu) && $menu == 'mainmenu' ? ' show' : '' }}">
+                        <li class="nav-item"><a href="{{ url('admin/pages/terms') }}" class="nav-link {{ !empty($menu) && $menu == 'submenu' ? 'active' : '' }}">Terms</a></li>
+                        <li class="nav-item"><a href="{{ url('admin/pages/privacy') }}" class="nav-link">Privacy & Policy</a></li>
+                        <li class="nav-item"><a href="{{ url('admin/pages/returnpolicy') }}" class="nav-link">Return Policy</a></li>
+
+                    </ul>
+                </li>
 
                 {{--<li class="nav-item ">--}}
                     {{--<a href="#" onclick="event.preventDefault(); this.closest('form').submit();" class="dropdown-item text-danger">--}}

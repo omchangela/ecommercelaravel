@@ -23,7 +23,8 @@
                     <th>Order Number</th>
                     <th>Customer Name</th>
                     <th>Total Amount</th>
-                    <th>Order Status</th>
+                    <th>Payment Status</th>
+                    <th>Delivery Status</th>
                     <th>Created At</th>
                     <th class="text-center">Actions</th>
                 </tr>
@@ -60,16 +61,58 @@
                 { data: 'shipping_name', name: 'shipping_name' },
                 { data: 'total_amount', name: 'total_amount' },
                 { data: 'status', name: 'status' },
+                { data: 'delivery_status', name: 'delivery_status' },
                 { data: 'created_at', name: 'created_at' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
-            // You can configure custom settings like pagination here
             pageLength: 10,
         });
 
         // Handle the pagination info
         oTable.on('draw', function() {
             $('#order-count').text(oTable.page.info().recordsTotal);
+        });
+
+        // Handle change event for delivery status dropdown
+        $(document).on('change', '.update_field', function() {
+            var orderId = $(this).data('id');
+            var deliveryStatus = $(this).val();
+
+            // Send AJAX request to update the delivery status
+            $.ajax({
+                url: '{{ route('admin.orders.updateDeliveryStatus') }}', // This route will call the updateDeliveryStatus method
+                method: 'POST',
+                data: {
+                    order_id: orderId,
+                    delivery_status: deliveryStatus,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to update the delivery status.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while updating the delivery status.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
         });
     });
 </script>

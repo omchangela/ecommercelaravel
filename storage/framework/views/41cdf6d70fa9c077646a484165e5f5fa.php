@@ -6,8 +6,8 @@
         <div class="container">
             <nav class="py-4 lh-30px" aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center py-1 mb-0">
-                    <li class="breadcrumb-item"><a title="Home" href="../index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a title="Shop" href="../shop/shop-layout-v2.html">Shop</a></li>
+                    <li class="breadcrumb-item"><a title="Home" href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a title="Shop" href="/shop">Shop</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Check Out</li>
                 </ol>
             </nav>
@@ -141,8 +141,8 @@
         const formEntries = Object.fromEntries(formData);
         console.log('Form Entries:', formEntries);
         for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-}
+            console.log(key, value);
+        }
 
         try {
             // Sending data to the backend to create the order
@@ -186,6 +186,25 @@
                         },
                         body: JSON.stringify(paymentResponse),
                     });
+
+                    // Show success popup after successful payment
+                    Swal.fire({
+                        title: 'Payment Successful!',
+                        text: 'Your payment was successful.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Redirect to /shop page after success
+                        window.location.href = '/shop';
+                    });
+                },
+                modal: true,
+                prefill: {
+                    name: 'Customer Name',
+                    email: 'customer@example.com',
+                },
+                theme: {
+                    color: '#3399cc', // Set the theme color if desired
                 }
             };
             console.log('Opening Razorpay Modal with options:', options);
@@ -193,6 +212,17 @@
 
         } catch (error) {
             console.error('Error during the order creation or Razorpay setup:', error);
+
+            // Show failure popup after error
+            Swal.fire({
+                title: 'Payment Failed!',
+                text: 'There was an issue with your payment.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Redirect to /shop page after failure
+                window.location.href = '/shop';
+            });
         }
     };
 </script>

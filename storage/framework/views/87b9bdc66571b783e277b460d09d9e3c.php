@@ -201,29 +201,34 @@
 
         // Handle Quick Update Field Change
         $('body').on('change', '.update_field', function () {
-            var row_id = $(this).attr('data-id');
-            $.ajax({
-                type: "PUT",
-                url: '<?php echo e(route($route . 'index')); ?>/' + row_id,
-                data: {
-                    "_token": "<?php echo e(csrf_token()); ?>",
-                    "id": row_id,
-                    "status": $(this).val(),
-                    "quick_update": "yes",
-                },
-                beforeSend: function () {
-                    $('#datatable').waitMe({ effect: 'roundBounce' });
-                },
-                complete: function () {
-                    $('#datatable').waitMe('hide');
-                },
-                success: function (result) {
-                    toastr_message(result.message_type, result.message);
-                    oTable.ajax.reload();
-                },
-                error: handleAjaxError
-            });
-        });
+    var row_id = $(this).attr('data-id');
+    var status_value = $(this).val();
+
+    $.ajax({
+        type: "PUT",
+        url: '<?php echo e(route($route . 'index')); ?>/' + row_id,
+        data: {
+            "_token": "<?php echo e(csrf_token()); ?>",
+            "id": row_id,
+            "status": status_value,
+            "quick_update": "yes",
+        },
+        beforeSend: function () {
+            $('#datatable').waitMe({ effect: 'roundBounce' });
+        },
+        complete: function () {
+            $('#datatable').waitMe('hide');
+        },
+        success: function (result) {
+            toastr_message(result.message_type, result.message);
+            oTable.ajax.reload();
+        },
+        error: function (error) {
+            alert('Error: Unable to update status.');
+        }
+    });
+});
+
 
         // Common Error Handler
         function handleAjaxError(e) {

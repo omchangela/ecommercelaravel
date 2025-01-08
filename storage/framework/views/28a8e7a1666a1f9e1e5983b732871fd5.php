@@ -42,25 +42,20 @@
                 <h3 class="fs-5 mb-6 ">Information</h3>
 
                 <ul class="list-unstyled mb-0 fw-medium ">
-
-                    <li class="pt-3 mb-4">
-                        <a href="#" title="Start a Return" class="text-body">Start a Return</a>
-                    </li>
-
                     <li class="pt-3 mb-4">
                         <a href="#" title="Contact Us" class="text-body">Contact Us</a>
                     </li>
 
                     <li class="pt-3 mb-4">
-                        <a href="#" title="Shipping FAQ" class="text-body">Shipping FAQ</a>
+                        <a href="/pages/terms" title="Terms &amp; Conditions" class="text-body">Terms &amp; Conditions</a>
                     </li>
 
                     <li class="pt-3 mb-4">
-                        <a href="#" title="Terms &amp; Conditions" class="text-body">Terms &amp; Conditions</a>
+                        <a href="/pages/privacy" title="Privacy Policy" class="text-body">Privacy Policy</a>
                     </li>
 
                     <li class="pt-3 mb-4">
-                        <a href="#" title="Privacy Policy" class="text-body">Privacy Policy</a>
+                        <a href="/pages/returnpolicy" title="Return Policy" class="text-body">Return Policy</a>
                     </li>
 
                 </ul>

@@ -9,7 +9,7 @@
         <div class="slick-slider hero hero-header-09"
             data-slick-options='{&#34;arrows&#34;:false,&#34;autoplay&#34;:true,&#34;cssEase&#34;:&#34;ease-in-out&#34;,&#34;dots&#34;:false,&#34;fade&#34;:true,&#34;infinite&#34;:true,&#34;slidesToShow&#34;:1,&#34;speed&#34;:600}'>
 
-            <?php $__currentLoopData = $banners; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $banner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php $__currentLoopData = $banners->reverse()->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $banner): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="vh-100 d-flex align-items-center">
                 <div class="lazy-bg bg-overlay position-absolute z-index-1 w-100 h-100   light-mode-img" data-bg-src="<?php echo e(asset('storage/' . $banner->image)); ?>">
                 </div>
@@ -288,7 +288,7 @@
                         <div class="card-img-overlay d-inline-flex flex-column p-8 justify-content-end text-center">
                             <h3 class="card-title text-white lh-45px"><?php echo e($category->name); ?></h3>
                             <div>
-                                <a href="#"
+                                <a href="/shop"
                                     class="btn btn-link p-0 fw-semibold text-white text-decoration-none">Disvover
                                     Now <svg class="icon">
                                         <use xlink:href="#icon-arrow-right"></use>

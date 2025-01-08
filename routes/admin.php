@@ -14,6 +14,10 @@ use App\Http\Controllers\Admin\ProductBannerController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\OrderProductsController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\PrivacyController;
+use App\Http\Controllers\Admin\ReturnController;
+use App\Http\Controllers\Admin\TermsController;
+
 
 Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -68,6 +72,10 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::resource('orderproducts', OrderProductsController::class);
     Route::resource('payments', PaymentController::class);
 
+    Route::resource('pages/terms', TermsController::class);
+    Route::resource('pages/privacy', PrivacyController::class);
+    Route::resource('pages/returnpolicy', ReturnController::class);
 });
 
 
+Route::post('admin/orders/update-delivery-status', [OrderController::class, 'updateDeliveryStatus'])->name('admin.orders.updateDeliveryStatus');

@@ -39,7 +39,11 @@
     <script src="{{ asset('assets/admin') }}/demo/pages/extra_noty.js"></script>
 
     <script src="{{ asset('assets/admin') }}/js/custom.js"></script>
-    
+    <!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.22/dist/sweetalert2.min.css" rel="stylesheet">
+<!-- SweetAlert2 JS -->
+
+
 </head>
 
 <body>
@@ -116,6 +120,9 @@
     @yield('modal')
 </div>
 <!-- /page content -->
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.22/dist/sweetalert2.min.js"></script>
 
 
 </body>

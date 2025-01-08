@@ -128,7 +128,34 @@
                     </a>
                 </li>
 
-                
+                <!-- <li class="nav-item">
+                    <a href="<?php echo e(url('admin/privacy')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'privacy' ? 'active' : ''); ?>">
+                        <i class="ph-rows"></i>
+                        <span> privacy & Policy</span>
+                        
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="<?php echo e(url('admin/terms')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'terms' ? 'active' : ''); ?>">
+                        <i class="ph-rows"></i>
+                        <span> Terms </span>
+                        
+                    </a>
+                </li> -->
+
+                <li class="nav-item nav-item-submenu <?php echo e(!empty($menu) && $menu == 'pages' ? ' nav-item-expanded nav-item-open' : ''); ?>">
+                    <a href="#" class="nav-link">
+                        <i class="ph-layout"></i>
+                        <span>pages</span>
+                    </a>
+                    <ul class="nav-group-sub collapse <?php echo e(!empty($menu) && $menu == 'mainmenu' ? ' show' : ''); ?>">
+                        <li class="nav-item"><a href="<?php echo e(url('admin/pages/terms')); ?>" class="nav-link <?php echo e(!empty($menu) && $menu == 'submenu' ? 'active' : ''); ?>">Terms</a></li>
+                        <li class="nav-item"><a href="<?php echo e(url('admin/pages/privacy')); ?>" class="nav-link">Privacy & Policy</a></li>
+                        <li class="nav-item"><a href="<?php echo e(url('admin/pages/returnpolicy')); ?>" class="nav-link">Return Policy</a></li>
+
+                    </ul>
+                </li>
 
                 
                     

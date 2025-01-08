@@ -35,7 +35,7 @@
 								title="" alt="">
 							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-							
+
 						</div>
 					</div>
 
@@ -96,7 +96,6 @@
 
 				<p class="text-body-emphasis fw-bold mb-6">Price List:</p>
 				<!-- Price Cards Section -->
-				<!-- Price Cards Section -->
 				<div class="d-flex flex-wrap gap-3">
 					<?php $__currentLoopData = $product->prices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $price): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 					<div
@@ -121,7 +120,13 @@
 				<!-- Check if the product is already in the wishlist -->
 				<?php
 				$user = Auth::user();
-				$isInWishlist = \App\Models\Wishlist::where('user_id', $user->id)->where('product_id', $product->id)->exists();
+				$isInWishlist = false; // Default value in case the user is not logged in
+
+				if ($user) {
+				$isInWishlist = \App\Models\Wishlist::where('user_id', $user->id)
+				->where('product_id', $product->id)
+				->exists();
+				}
 				?>
 
 				<!-- Add to Cart Form -->
@@ -168,6 +173,12 @@
 							return false; // Prevent form submission
 						}
 
+						Swal.fire({
+							icon: 'success',
+							title: 'Added to Cart',
+							text: 'Your product has been added to the cart!',
+						});
+
 						return true; // Allow form submission
 					}
 				</script>
@@ -194,8 +205,9 @@
 				</style>
 
 				<!-- Wishlist Form -->
+				<!-- Wishlist Form -->
 				<?php if($isInWishlist): ?>
-				<!-- If the product is already in the wishlist, show "Product Added" button with new color -->
+				<!-- If the product is already in the wishlist, show "Product Added" button -->
 				<button type="button" class="btn wishlist-button-added mt-4" id="remove-from-wishlist-btn">
 					<i class="fas fa-heart"></i> Added to Wishlist
 				</button>
@@ -210,39 +222,70 @@
 				<!-- If the product is not in the wishlist, show the "Add to Wishlist" button -->
 				<form action="<?php echo e(route('wishlist.store')); ?>" method="POST" id="wishlist-form">
 					<?php echo csrf_field(); ?>
-					<!-- Hidden fields for product information -->
 					<input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
 					<input type="hidden" name="product_name" value="<?php echo e($product->name); ?>">
 					<input type="hidden" name="product_image" value="<?php echo e($product->image_url); ?>">
 					<input type="hidden" name="price" id="wishlist-price" value="<?php echo e($product->prices->first()->price ?? ''); ?>">
 					<input type="hidden" name="unit" id="wishlist-unit" value="<?php echo e($product->prices->first()->unit ?? ''); ?>">
 
-					<!-- Add to Wishlist Button -->
 					<button type="submit" class="btn btn-primary mt-4">
 						<i class="fas fa-heart"></i> Add to Wishlist
 					</button>
 				</form>
 				<?php endif; ?>
 
-				<!-- JavaScript for Handling Removal from Wishlist with Confirmation -->
+				<!-- JavaScript for Handling Wishlist Actions with SweetAlert -->
 				<script>
-					document.getElementById('remove-from-wishlist-btn').addEventListener('click', function() {
-						const userConfirmed = confirm("Are you sure you want to remove this product from your wishlist?");
-
-						if (userConfirmed) {
-							// Submit the form to remove the product from the wishlist
-							document.getElementById('remove-from-wishlist-form').submit();
-						}
+					// Handle Removing from Wishlist
+					document.getElementById('remove-from-wishlist-btn')?.addEventListener('click', function() {
+						Swal.fire({
+							title: 'Are you sure?',
+							text: "You want to remove this Product from wishlist!",
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonText: 'Yes'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								document.getElementById('remove-from-wishlist-form').submit();
+							}
+						});
 					});
+
+					// Show SweetAlert for Adding to Wishlist
+					document.getElementById('wishlist-form')?.addEventListener('submit', function(e) {
+						e.preventDefault(); // Prevent form submission
+						Swal.fire({
+							icon: 'success',
+							title: 'Added to Wishlist',
+							text: 'Your product has been added to the wishlist!',
+						}).then(() => {
+							// Submit the form after showing the alert
+							e.target.submit();
+						});
+					});
+
+					// Handle Flash Session for Wishlist Actions
+					<?php if(session('wishlistAction') === 'added'): ?>
+					Swal.fire({
+						icon: 'success',
+						title: 'Added to Wishlist',
+						text: 'Your product has been added to the wishlist!',
+					});
+					<?php elseif(session('wishlistAction') === 'removed'): ?>
+					Swal.fire({
+						icon: 'success',
+						title: 'Removed from Wishlist',
+						text: 'Your product has been removed from the wishlist!',
+					});
+					<?php endif; ?>
 				</script>
 
-				<!-- JavaScript for Refreshing Page After Adding to Wishlist -->
-				<?php if(session('reload')): ?>
-				<script>
-					// Reload the page after adding to wishlist
-					window.location.reload();
-				</script>
-				<?php endif; ?>
+
+
+
+
 
 
 
@@ -330,9 +373,47 @@
 										<?php if(!empty($detail->image) && file_exists(public_path('storage/' . $detail->image))): ?>
 										<img src="<?php echo e(asset('storage/' . $detail->image)); ?>" class="w-100 lazy-image" alt="Image" width="470" height="540">
 										<?php else: ?>
-										<div class="placeholder-image" style="width: 470px; height: 540px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-											<span>No Image Available</span>
-										</div>
+										<div class="placeholder-image d-flex align-items-center justify-content-center mx-auto">
+    <span class="text-muted mt-8">No Image Available</span>
+</div>
+
+<style>
+    .placeholder-image {
+        width: 100%;
+        max-width: 470px; /* Maximum width for larger screens */
+        height: 0;
+        padding-top: 115%; /* Aspect ratio: 470px / 540px = 115% */
+        background: #f0f0f0;
+        border-radius: 8px; /* Optional: Rounded corners */
+        text-align: center;
+    }
+    
+    .placeholder-image span {
+        font-size: 1rem; /* Default font size */
+        color: #6c757d; /* Bootstrap muted text color */
+    }
+
+    @media (max-width: 768px) {
+        .placeholder-image {
+            max-width: 80%; /* Scale down on medium screens */
+        }
+
+        .placeholder-image span {
+            font-size: 0.9rem; /* Slightly smaller text */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .placeholder-image {
+            max-width: 100%; /* Full width on smaller screens */
+        }
+
+        .placeholder-image span {
+            font-size: 0.8rem; /* Adjust font size further */
+        }
+    }
+</style>
+
 										<?php endif; ?>
 									</div>
 
